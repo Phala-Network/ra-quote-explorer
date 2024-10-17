@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Shield, FileText, Info } from 'lucide-react';
+import { Upload, Shield, FileText } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
