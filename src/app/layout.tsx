@@ -15,26 +15,36 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: 'dstack Confidant | Trusted Execution Environment Analyzer',
-    template: '%s | dstack Confidant'
+    default: "dstack Confidant | Trusted Execution Environment Analyzer",
+    template: "%s | dstack Confidant",
   },
-  description: 'Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with dstack Confidant.',
-  keywords: ['TEE', 'Trusted Execution Environment', 'Attestation', 'Security', 'Analysis', 'dstack', 'Confidant'],
-  authors: [{ name: 'PhalaNetwork' }],
-  creator: 'PhalaNetwork',
-  publisher: 'PhalaNetwork',
+  description:
+    "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with dstack Confidant.",
+  keywords: [
+    "TEE",
+    "Trusted Execution Environment",
+    "Attestation",
+    "Security",
+    "Analysis",
+    "dstack",
+    "Confidant",
+  ],
+  authors: [{ name: "PhalaNetwork" }],
+  creator: "PhalaNetwork",
+  publisher: "PhalaNetwork",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
+    type: "website",
+    locale: "en_US",
     // url: 'https://www.example.com',
-    siteName: 'dstack Confidant',
-    title: 'dstack Confidant | Trusted Execution Environment Analyzer',
-    description: 'Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments.',
+    siteName: "dstack Confidant",
+    title: "dstack Confidant | Trusted Execution Environment Analyzer",
+    description:
+      "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments.",
     // images: [
     //   {
     //     url: 'https://www.example.com/og-image.jpg',
@@ -45,19 +55,20 @@ export const metadata: Metadata = {
     // ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'dstack Confidant | TEE Attestation Analyzer',
-    description: 'Secure and comprehensive analysis for TEE attestation reports.',
+    card: "summary_large_image",
+    title: "dstack Confidant | TEE Attestation Analyzer",
+    description:
+      "Secure and comprehensive analysis for TEE attestation reports.",
     // images: ['https://www.example.com/twitter-image.jpg'],
-    creator: '@PhalaNetwork',
+    creator: "@PhalaNetwork",
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
-  manifest: '/site.webmanifest',
-  themeColor: '#ccff55', // Your brand color
+  manifest: "/site.webmanifest",
+  themeColor: "#ccff55", // Your brand color
 };
 
 export default function RootLayout({
