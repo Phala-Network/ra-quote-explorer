@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "Security",
     "Analysis",
     "dstack",
-    "TEE Attestation Explorer"
+    "TEE Attestation Explorer",
   ],
   authors: [{ name: "PhalaNetwork" }],
   creator: "PhalaNetwork",

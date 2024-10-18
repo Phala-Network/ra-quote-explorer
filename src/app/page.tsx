@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { Shield, FileText } from "lucide-react";
@@ -15,11 +15,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { QuoteUpload } from '@/components/quote_upload'
-import { type TDXQuote, ReportView } from '@/components/report_view'
+import { QuoteUpload } from "@/components/quote_upload";
+import { type TDXQuote, ReportView } from "@/components/report_view";
 
-function DefaultView({ onReport }: {
-  onReport: (i: TDXQuote) => unknown
+function DefaultView({
+  onReport,
+}: {
+  onReport: (i: TDXQuote) => unknown;
 }) {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -73,131 +75,129 @@ function DefaultView({ onReport }: {
         {/*   </Card> */}
         {/* </div> */}
 
-      {/*   <Accordion type="single" collapsible className="mt-8"> */}
-      {/*     <AccordionItem value="attestation"> */}
-      {/*       <AccordionTrigger>What is Remote Attestation?</AccordionTrigger> */}
-      {/*       <AccordionContent> */}
-      {/*         <p> */}
-      {/*           Remote Attestation is a process that allows a remote party */}
-      {/*           (verifier) to verify the integrity and authenticity of a secure */}
-      {/*           environment, such as an Intel SGX enclave or a Trust Domain */}
-      {/*           (TD). It involves: */}
-      {/*         </p> */}
-      {/*         <ul className="list-disc pl-5 mt-2"> */}
-      {/*           <li> */}
-      {/*             Generating cryptographic evidence (quote) of the secure */}
-      {/*             environment's state */}
-      {/*           </li> */}
-      {/*           <li> */}
-      {/*             Verifying this evidence to ensure the environment is genuine */}
-      {/*             and untampered */}
-      {/*           </li> */}
-      {/*           <li> */}
-      {/*             Establishing trust in the secure environment's integrity and */}
-      {/*             the code running within it */}
-      {/*           </li> */}
-      {/*         </ul> */}
-      {/*       </AccordionContent> */}
-      {/*     </AccordionItem> */}
-      {/*     <AccordionItem value="dcap"> */}
-      {/*       <AccordionTrigger>What is DCAP?</AccordionTrigger> */}
-      {/*       <AccordionContent> */}
-      {/*         <p> */}
-      {/*           DCAP (Data Center Attestation Primitives) is an Intel technology */}
-      {/*           designed for scalable remote attestation in data center */}
-      {/*           environments. It's part of the Intel SGX ecosystem and offers: */}
-      {/*         </p> */}
-      {/*         <ul className="list-disc pl-5 mt-2"> */}
-      {/*           <li> */}
-      {/*             Flexible attestation quote verification for data center */}
-      {/*             operators */}
-      {/*           </li> */}
-      {/*           <li>Support for custom attestation infrastructure</li> */}
-      {/*           <li>Enhanced security through a hardware-rooted trust chain</li> */}
-      {/*           <li> */}
-      {/*             Compatibility with both SGX enclaves and Trust Domains (TDX) */}
-      {/*           </li> */}
-      {/*         </ul> */}
-      {/*       </AccordionContent> */}
-      {/*     </AccordionItem> */}
-      {/*   </Accordion> */}
+        {/*   <Accordion type="single" collapsible className="mt-8"> */}
+        {/*     <AccordionItem value="attestation"> */}
+        {/*       <AccordionTrigger>What is Remote Attestation?</AccordionTrigger> */}
+        {/*       <AccordionContent> */}
+        {/*         <p> */}
+        {/*           Remote Attestation is a process that allows a remote party */}
+        {/*           (verifier) to verify the integrity and authenticity of a secure */}
+        {/*           environment, such as an Intel SGX enclave or a Trust Domain */}
+        {/*           (TD). It involves: */}
+        {/*         </p> */}
+        {/*         <ul className="list-disc pl-5 mt-2"> */}
+        {/*           <li> */}
+        {/*             Generating cryptographic evidence (quote) of the secure */}
+        {/*             environment's state */}
+        {/*           </li> */}
+        {/*           <li> */}
+        {/*             Verifying this evidence to ensure the environment is genuine */}
+        {/*             and untampered */}
+        {/*           </li> */}
+        {/*           <li> */}
+        {/*             Establishing trust in the secure environment's integrity and */}
+        {/*             the code running within it */}
+        {/*           </li> */}
+        {/*         </ul> */}
+        {/*       </AccordionContent> */}
+        {/*     </AccordionItem> */}
+        {/*     <AccordionItem value="dcap"> */}
+        {/*       <AccordionTrigger>What is DCAP?</AccordionTrigger> */}
+        {/*       <AccordionContent> */}
+        {/*         <p> */}
+        {/*           DCAP (Data Center Attestation Primitives) is an Intel technology */}
+        {/*           designed for scalable remote attestation in data center */}
+        {/*           environments. It's part of the Intel SGX ecosystem and offers: */}
+        {/*         </p> */}
+        {/*         <ul className="list-disc pl-5 mt-2"> */}
+        {/*           <li> */}
+        {/*             Flexible attestation quote verification for data center */}
+        {/*             operators */}
+        {/*           </li> */}
+        {/*           <li>Support for custom attestation infrastructure</li> */}
+        {/*           <li>Enhanced security through a hardware-rooted trust chain</li> */}
+        {/*           <li> */}
+        {/*             Compatibility with both SGX enclaves and Trust Domains (TDX) */}
+        {/*           </li> */}
+        {/*         </ul> */}
+        {/*       </AccordionContent> */}
+        {/*     </AccordionItem> */}
+        {/*   </Accordion> */}
 
-      {/*   <Card className="mt-8"> */}
-      {/*     <CardHeader> */}
-      {/*       <CardTitle>Frequently Asked Questions (FAQ)</CardTitle> */}
-      {/*     </CardHeader> */}
-      {/*     <CardContent> */}
-      {/*       <Accordion type="multiple"> */}
-      {/*         <AccordionItem value="sgx"> */}
-      {/*           <AccordionTrigger>What is Intel SGX?</AccordionTrigger> */}
-      {/*           <AccordionContent> */}
-      {/*             Intel SGX (Software Guard Extensions) is a set of */}
-      {/*             security-related instruction codes built into modern Intel */}
-      {/*             CPUs. It allows user-level code to allocate private regions of */}
-      {/*             memory, called enclaves, which are protected from processes */}
-      {/*             running at higher privilege levels. */}
-      {/*           </AccordionContent> */}
-      {/*         </AccordionItem> */}
-      {/*         <AccordionItem value="td"> */}
-      {/*           <AccordionTrigger> */}
-      {/*             What is a Trust Domain (TD)? */}
-      {/*           </AccordionTrigger> */}
-      {/*           <AccordionContent> */}
-      {/*             A Trust Domain (TD) is a hardware-isolated environment */}
-      {/*             provided by Intel Trust Domain Extensions (TDX) technology. It */}
-      {/*             offers confidentiality and integrity protection for virtual */}
-      {/*             machines in cloud environments, similar to how SGX protects */}
-      {/*             applications. */}
-      {/*           </AccordionContent> */}
-      {/*         </AccordionItem> */}
-      {/*         <AccordionItem value="quote"> */}
-      {/*           <AccordionTrigger> */}
-      {/*             What is an attestation quote? */}
-      {/*           </AccordionTrigger> */}
-      {/*           <AccordionContent> */}
-      {/*             An attestation quote is a cryptographically signed structure */}
-      {/*             containing information about the secure environment (SGX */}
-      {/*             enclave or TD). It includes measurements of the code and data */}
-      {/*             within the environment, as well as information about the */}
-      {/*             platform it's running on. This quote is used in the remote */}
-      {/*             attestation process to verify the integrity and authenticity */}
-      {/*             of the environment. */}
-      {/*           </AccordionContent> */}
-      {/*         </AccordionItem> */}
-      {/*         <AccordionItem value="mrenclave"> */}
-      {/*           <AccordionTrigger>What is MRENCLAVE?</AccordionTrigger> */}
-      {/*           <AccordionContent> */}
-      {/*             MRENCLAVE is a measurement unique to a specific enclave */}
-      {/*             version. It represents a cryptographic hash of the enclave's */}
-      {/*             code, initial data, and the order and details of how the */}
-      {/*             enclave was built. It's used to identify and verify the */}
-      {/*             integrity of an enclave during the attestation process. */}
-      {/*           </AccordionContent> */}
-      {/*         </AccordionItem> */}
-      {/*         <AccordionItem value="mrsigner"> */}
-      {/*           <AccordionTrigger>What is MRSIGNER?</AccordionTrigger> */}
-      {/*           <AccordionContent> */}
-      {/*             MRSIGNER is a measurement of the entity that signed the */}
-      {/*             enclave. It's derived from the public key of the RSA key pair */}
-      {/*             used to sign the enclave. MRSIGNER is used to identify the */}
-      {/*             author or publisher of an enclave and can be used to establish */}
-      {/*             trust in the enclave's source. */}
-      {/*           </AccordionContent> */}
-      {/*         </AccordionItem> */}
-      {/*       </Accordion> */}
-      {/*     </CardContent> */}
-      {/*   </Card> */}
+        {/*   <Card className="mt-8"> */}
+        {/*     <CardHeader> */}
+        {/*       <CardTitle>Frequently Asked Questions (FAQ)</CardTitle> */}
+        {/*     </CardHeader> */}
+        {/*     <CardContent> */}
+        {/*       <Accordion type="multiple"> */}
+        {/*         <AccordionItem value="sgx"> */}
+        {/*           <AccordionTrigger>What is Intel SGX?</AccordionTrigger> */}
+        {/*           <AccordionContent> */}
+        {/*             Intel SGX (Software Guard Extensions) is a set of */}
+        {/*             security-related instruction codes built into modern Intel */}
+        {/*             CPUs. It allows user-level code to allocate private regions of */}
+        {/*             memory, called enclaves, which are protected from processes */}
+        {/*             running at higher privilege levels. */}
+        {/*           </AccordionContent> */}
+        {/*         </AccordionItem> */}
+        {/*         <AccordionItem value="td"> */}
+        {/*           <AccordionTrigger> */}
+        {/*             What is a Trust Domain (TD)? */}
+        {/*           </AccordionTrigger> */}
+        {/*           <AccordionContent> */}
+        {/*             A Trust Domain (TD) is a hardware-isolated environment */}
+        {/*             provided by Intel Trust Domain Extensions (TDX) technology. It */}
+        {/*             offers confidentiality and integrity protection for virtual */}
+        {/*             machines in cloud environments, similar to how SGX protects */}
+        {/*             applications. */}
+        {/*           </AccordionContent> */}
+        {/*         </AccordionItem> */}
+        {/*         <AccordionItem value="quote"> */}
+        {/*           <AccordionTrigger> */}
+        {/*             What is an attestation quote? */}
+        {/*           </AccordionTrigger> */}
+        {/*           <AccordionContent> */}
+        {/*             An attestation quote is a cryptographically signed structure */}
+        {/*             containing information about the secure environment (SGX */}
+        {/*             enclave or TD). It includes measurements of the code and data */}
+        {/*             within the environment, as well as information about the */}
+        {/*             platform it's running on. This quote is used in the remote */}
+        {/*             attestation process to verify the integrity and authenticity */}
+        {/*             of the environment. */}
+        {/*           </AccordionContent> */}
+        {/*         </AccordionItem> */}
+        {/*         <AccordionItem value="mrenclave"> */}
+        {/*           <AccordionTrigger>What is MRENCLAVE?</AccordionTrigger> */}
+        {/*           <AccordionContent> */}
+        {/*             MRENCLAVE is a measurement unique to a specific enclave */}
+        {/*             version. It represents a cryptographic hash of the enclave's */}
+        {/*             code, initial data, and the order and details of how the */}
+        {/*             enclave was built. It's used to identify and verify the */}
+        {/*             integrity of an enclave during the attestation process. */}
+        {/*           </AccordionContent> */}
+        {/*         </AccordionItem> */}
+        {/*         <AccordionItem value="mrsigner"> */}
+        {/*           <AccordionTrigger>What is MRSIGNER?</AccordionTrigger> */}
+        {/*           <AccordionContent> */}
+        {/*             MRSIGNER is a measurement of the entity that signed the */}
+        {/*             enclave. It's derived from the public key of the RSA key pair */}
+        {/*             used to sign the enclave. MRSIGNER is used to identify the */}
+        {/*             author or publisher of an enclave and can be used to establish */}
+        {/*             trust in the enclave's source. */}
+        {/*           </AccordionContent> */}
+        {/*         </AccordionItem> */}
+        {/*       </Accordion> */}
+        {/*     </CardContent> */}
+        {/*   </Card> */}
       </div>
     </div>
-  )
+  );
 }
 
 export default function Home() {
-  const [report, setReport] = useState<TDXQuote | null>(null)
+  const [report, setReport] = useState<TDXQuote | null>(null);
   if (!report) {
-    return <DefaultView onReport={setReport} />
+    return <DefaultView onReport={setReport} />;
   }
-  return (
-    <ReportView report={report} />
-  )
+  return <ReportView report={report} />;
 }

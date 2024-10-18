@@ -110,9 +110,7 @@ export function ReportView({ report }: { report: TDXQuote }) {
             <CardTitle>Certificate Data</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="font-mono break-all">
-              {report.cert_data}
-            </pre>
+            <pre className="font-mono break-all">{report.cert_data}</pre>
           </CardContent>
         </Card>
       </div>
