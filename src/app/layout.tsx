@@ -15,11 +15,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "dstack Confidant | Trusted Execution Environment Analyzer",
-    template: "%s | dstack Confidant",
+    default: "TEE Attestation Explorer",
+    template: "%s | TEE Attestation Explorer",
   },
   description:
-    "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with dstack Confidant.",
+    "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with TEE Attestation Explorer.",
   keywords: [
     "TEE",
     "Trusted Execution Environment",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "Security",
     "Analysis",
     "dstack",
-    "Confidant",
+    "TEE Attestation Explorer"
   ],
   authors: [{ name: "PhalaNetwork" }],
   creator: "PhalaNetwork",
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     // url: 'https://www.example.com',
-    siteName: "dstack Confidant",
-    title: "dstack Confidant | Trusted Execution Environment Analyzer",
+    siteName: "TEE Attestation Explorer",
+    title: "TEE Attestation Explorer",
     description:
       "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments.",
     // images: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "dstack Confidant | TEE Attestation Analyzer",
+    title: "TEE Attestation Explorer",
     description:
       "Secure and comprehensive analysis for TEE attestation reports.",
     // images: ['https://www.example.com/twitter-image.jpg'],

@@ -26,7 +26,7 @@ function DefaultView({ onReport }: {
       <div className="max-w-4xl mx-auto">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            SGX/TD Attestation Report Analyzer
+            TEE Attestation Explorer
           </h1>
           <p className="mt-5 text-xl text-gray-500">
             Verify and analyze Intel SGX and TD attestation reports with
