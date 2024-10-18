@@ -1,4 +1,4 @@
-import { Shield, Cpu, Lock, Calendar } from "lucide-react";
+import { Shield, Cpu, Lock, Calendar, ArrowLeft } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export interface TDXQuote {
   header: {
@@ -44,13 +44,19 @@ export interface TDXQuote {
   };
 }
 
-export function ReportView({ report }: { report: TDXQuote }) {
+export function ReportView({
+  report,
+  onReset,
+}: { report: TDXQuote; onReset: () => void }) {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Report Analysis Results
-        </h1>
+        <div className="mb-8">
+          <Button onClick={onReset} variant="outline">
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
 
         <Card className="mb-8">
           <CardHeader>
@@ -96,8 +102,10 @@ export function ReportView({ report }: { report: TDXQuote }) {
               <TableBody>
                 {Object.entries(report.body).map(([key, value]) => (
                   <TableRow key={key}>
-                    <TableCell>{key}</TableCell>
-                    <TableCell className="font-mono">{value}</TableCell>
+                    <TableCell className="font-mono">{key}</TableCell>
+                    <TableCell className="font-mono break-all">
+                      {value}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -105,14 +113,16 @@ export function ReportView({ report }: { report: TDXQuote }) {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Certificate Data</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="font-mono break-all">{report.cert_data}</pre>
-          </CardContent>
-        </Card>
+        {report.cert_data ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Certificate Data</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <pre className="font-mono break-all">{report.cert_data}</pre>
+            </CardContent>
+          </Card>
+        ) : null}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
@@ -199,5 +200,5 @@ export default function Home() {
   if (!report) {
     return <DefaultView onReport={setReport} />;
   }
-  return <ReportView report={report} />;
+  return <ReportView report={report} onReset={() => setReport(null)} />;
 }
