@@ -1,6 +1,9 @@
+"use client";
+
 import { useState } from "react";
 import { AlertCircle, Upload } from "lucide-react";
 import { ofetch } from "ofetch";
+import { useRouter } from "next/navigation";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -14,7 +17,6 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { type TDXQuote } from "@/components/report_view";
 
 function hexToUint8Array(hex: string) {
   hex = hex.trim();
@@ -63,13 +65,10 @@ async function uploadFile(file: File) {
   });
 }
 
-export function QuoteUpload({
-  onSuccess,
-}: {
-  onSuccess: (i: TDXQuote) => unknown;
-}) {
+export function QuoteUpload() {
   const [hex, setHex] = useState("");
   const [hasError, setHasError] = useState(false);
+  const router = useRouter();
   return (
     <form>
       <Tabs defaultValue="hex" className="">
@@ -112,9 +111,9 @@ export function QuoteUpload({
                   evt.preventDefault();
                   try {
                     const data = hexToUint8Array(hex);
-                    const { success, quote } = await uploadUint8Array(data);
+                    const { success, checksum } = await uploadUint8Array(data);
                     if (success) {
-                      onSuccess(quote);
+                      router.push(`/reports/${checksum}`);
                     } else {
                       setHasError(true);
                     }
@@ -153,9 +152,9 @@ export function QuoteUpload({
                     const file = e.target.files?.[0];
                     if (file) {
                       try {
-                        const { success, quote } = await uploadFile(file);
+                        const { success, checksum } = await uploadFile(file);
                         if (success) {
-                          onSuccess(quote);
+                          router.push(`/reports/${checksum}`);
                         } else {
                           setHasError(true);
                         }

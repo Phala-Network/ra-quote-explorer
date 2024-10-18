@@ -1,4 +1,5 @@
 import { Shield, Cpu, Lock, Calendar, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import {
   Card,
   CardHeader,
@@ -44,17 +45,16 @@ export interface TDXQuote {
   };
 }
 
-export function ReportView({
-  report,
-  onReset,
-}: { report: TDXQuote; onReset: () => void }) {
+export function ReportView({ report }: { report: TDXQuote }) {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <Button onClick={onReset} variant="outline">
-            <ArrowLeft className="h-4 w-4" />
-            Back
+          <Button asChild variant="outline">
+            <Link href="/">
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Link>
           </Button>
         </div>
 
