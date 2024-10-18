@@ -1,6 +1,7 @@
-import React from "react";
-import { Upload, Shield, FileText } from "lucide-react";
-import { Button } from "@/components/ui/button";
+'use client'
+
+import { useState } from "react";
+import { Shield, FileText } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -14,8 +15,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { QuoteUpload } from '@/components/quote_upload'
+import { type TDXQuote, ReportView } from '@/components/report_view'
 
-export default function Home() {
+function DefaultView({ onReport }: {
+  onReport: (i: TDXQuote) => unknown
+}) {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -37,10 +42,7 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button>
-              <Upload className="mr-2 h-5 w-5" />
-              Upload Attestation Quote
-            </Button>
+            <QuoteUpload onSuccess={onReport} />
           </CardContent>
         </Card>
 
@@ -187,5 +189,15 @@ export default function Home() {
         </Card>
       </div>
     </div>
-  );
+  )
+}
+
+export default function Home() {
+  const [report, setReport] = useState<TDXQuote | null>(null)
+  if (!report) {
+    return <DefaultView onReport={setReport} />
+  }
+  return (
+    <ReportView report={report} />
+  )
 }

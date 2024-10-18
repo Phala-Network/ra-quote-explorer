@@ -16,20 +16,35 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export default function ReportDisplayPage() {
-  // This is mock data. In a real application, this would come from your backend
-  const reportData = {
-    type: "SGX",
-    timestamp: "2024-10-17T14:30:00Z",
-    mrenclave: "0x1234567890abcdef...",
-    mrsigner: "0xabcdef1234567890...",
-    isvprodid: "1",
-    isvsvn: "2",
-    reportData: "0xdeadbeefcafebabe...",
-    cpusvn: "0x0102030405060708...",
-    flags: ["INITTED", "DEBUG", "MODE64BIT"],
+export interface TDXQuote {
+  header: {
+    version: number;
+    ak_type: string;
+    tee_type: string;
+    qe_vendor: string;
+    user_data: string;
   };
+  cert_data: string;
+  body: {
+    tee_tcb_svn: string;
+    mrseam: string;
+    mrsignerseam: string;
+    seamattributes: string;
+    tdattributes: string;
+    xfam: string;
+    mrtd: string;
+    mrconfig: string;
+    mrowner: string;
+    mrownerconfig: string;
+    rtmr0: string;
+    rtmr1: string;
+    rtmr2: string;
+    rtmr3: string;
+    reportdata: string;
+  };
+}
 
+export function ReportView({ report }: { report: TDXQuote }) {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -48,21 +63,19 @@ export default function ReportDisplayPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center">
                 <Shield className="mr-2 h-5 w-5 text-blue-500" />
-                <span>Type: {reportData.type}</span>
+                <span>Version: {report.header.version}</span>
               </div>
               <div className="flex items-center">
                 <Calendar className="mr-2 h-5 w-5 text-green-500" />
-                <span>
-                  Timestamp: {new Date(reportData.timestamp).toLocaleString()}
-                </span>
+                <span>AK Type: {report.header.ak_type}</span>
               </div>
               <div className="flex items-center">
                 <Cpu className="mr-2 h-5 w-5 text-purple-500" />
-                <span>CPU SVN: {reportData.cpusvn}</span>
+                <span>TEE Type: {report.header.tee_type}</span>
               </div>
               <div className="flex items-center">
                 <Lock className="mr-2 h-5 w-5 text-red-500" />
-                <span>ISV SVN: {reportData.isvsvn}</span>
+                <span>QE Vendor: {report.header.qe_vendor}</span>
               </div>
             </div>
           </CardContent>
@@ -70,7 +83,7 @@ export default function ReportDisplayPage() {
 
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Measurement Details</CardTitle>
+            <CardTitle>Body Details</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -81,24 +94,12 @@ export default function ReportDisplayPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell>MRENCLAVE</TableCell>
-                  <TableCell className="font-mono">
-                    {reportData.mrenclave}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>MRSIGNER</TableCell>
-                  <TableCell className="font-mono">
-                    {reportData.mrsigner}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Report Data</TableCell>
-                  <TableCell className="font-mono">
-                    {reportData.reportData}
-                  </TableCell>
-                </TableRow>
+                {Object.entries(report.body).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell>{key}</TableCell>
+                    <TableCell className="font-mono">{value}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -106,16 +107,12 @@ export default function ReportDisplayPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Flags</CardTitle>
+            <CardTitle>Certificate Data</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {reportData.flags.map((flag, index) => (
-                <Badge key={index} variant="secondary">
-                  {flag}
-                </Badge>
-              ))}
-            </div>
+            <pre className="font-mono break-all">
+              {report.cert_data}
+            </pre>
           </CardContent>
         </Card>
       </div>
