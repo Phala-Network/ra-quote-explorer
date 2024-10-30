@@ -1,4 +1,4 @@
-import { Shield, Cpu, Lock, Calendar, ArrowLeft } from "lucide-react";
+import { Cpu, Lock, Calendar, ArrowLeft, Shield, ShieldOff } from "lucide-react";
 import Link from "next/link";
 import {
   Card,
@@ -16,6 +16,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/lib/utils'
 
 export interface TDXQuote {
   header: {
@@ -43,6 +45,32 @@ export interface TDXQuote {
     rtmr3: string;
     reportdata: string;
   };
+  verified: boolean;
+}
+
+const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
+  return (
+    <Alert variant={isVerified ? "default" : "destructive"} className={cn( "mb-8", isVerified ? "bg-green-50" : "bg-yellow-50")}>
+      <div className="flex items-center gap-3">
+        {isVerified ? (
+          <Shield className="h-5 w-5 text-green-500" />
+        ) : (
+          <ShieldOff className="h-5 w-5 text-red-500" />
+        )}
+        <div>
+          <AlertTitle className="text-base font-semibold">
+            {isVerified ? "VERIFIED" : "UNVERIFIED"}
+          </AlertTitle>
+          <AlertDescription className="text-sm mt-1">
+            {isVerified 
+              ? "Quote has passed TEE environment DCAP verification and is safe to use."
+              : "Quote failed DCAP verification. Please check TEE environment configuration."
+            }
+          </AlertDescription>
+        </div>
+      </div>
+    </Alert>
+  );
 }
 
 export function ReportView({ report }: { report: TDXQuote }) {
@@ -57,6 +85,8 @@ export function ReportView({ report }: { report: TDXQuote }) {
             </Link>
           </Button>
         </div>
+
+        <DcapVerificationStatus isVerified={report.verified} />
 
         <Card className="mb-8">
           <CardHeader>
