@@ -96,20 +96,20 @@ export function ReportView({ report }: { report: TDXQuote }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="md:flex items-center">
                 <Shield className="mr-2 h-5 w-5 text-blue-500" />
                 <span>Version: {report.header.version}</span>
               </div>
-              <div className="flex items-center">
+              <div className="md:flex items-center">
                 <Calendar className="mr-2 h-5 w-5 text-green-500" />
                 <span>AK Type: {report.header.ak_type}</span>
               </div>
-              <div className="flex items-center">
+              <div className="md:flex items-center">
                 <Cpu className="mr-2 h-5 w-5 text-purple-500" />
                 <span>TEE Type: {report.header.tee_type}</span>
               </div>
-              <div className="flex items-center">
+              <div className="md:flex items-center">
                 <Lock className="mr-2 h-5 w-5 text-red-500" />
                 <span>QE Vendor: {report.header.qe_vendor}</span>
               </div>
