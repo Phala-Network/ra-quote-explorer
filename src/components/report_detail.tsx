@@ -24,6 +24,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { DownloadButton } from "@/components/download_button";
 import { cn } from "@/lib/utils";
 import { type TDXQuote } from "@/types";
+import { TimeDisplay } from './time_display'
 
 const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   return (
@@ -53,6 +54,7 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
 };
 
 export function ReportDetail({ report }: { report: TDXQuote }) {
+  console.log(report)
   return (
     <>
       <DcapVerificationStatus isVerified={report.verified} />
@@ -87,7 +89,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
             </div>
             <div className="md:flex items-center">
               <Lock className="mr-2 h-5 w-5 text-red-500" />
-              <span>QE Vendor: {report.header.qe_vendor}</span>
+              <span>Uploaded At: <TimeDisplay isoString={report.uploaded_at} /></span>
             </div>
           </div>
         </CardContent>

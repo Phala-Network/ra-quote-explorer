@@ -27,4 +27,5 @@ export interface TDXQuote {
   verified: boolean;
   checksum: string;
   can_download: boolean;
+  uploaded_at: string;
 }

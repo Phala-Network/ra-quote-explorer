@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { TimeDisplay } from './time_display'
 
 export function RecentAttestations({
   items,
@@ -33,7 +34,7 @@ export function RecentAttestations({
                     {item.checksum}
                   </Link>
                 </TableCell>
-                <TableCell>{new Date(item.created_at).toUTCString()}</TableCell>
+                <TableCell><TimeDisplay isoString={item.created_at} /></TableCell>
               </TableRow>
             ))}
           </TableBody>
