@@ -1,18 +1,22 @@
-'use client';
-import { Download } from "lucide-react"
+"use client";
+import { Download } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
-export const DownloadButton = ({ url, name, isAvailable = true }: { url?: string, name: string, isAvailable: boolean }) => {
+export const DownloadButton = ({
+  url,
+  name,
+  isAvailable = true,
+}: { url?: string; name: string; isAvailable: boolean }) => {
   const handleDownload = async () => {
     if (!url) {
-      return
+      return;
     }
     try {
       const response = await fetch(url);
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = downloadUrl;
       link.download = name;
       document.body.appendChild(link);
@@ -20,7 +24,7 @@ export const DownloadButton = ({ url, name, isAvailable = true }: { url?: string
       link.remove();
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     }
   };
 
@@ -42,5 +46,3 @@ export const DownloadButton = ({ url, name, isAvailable = true }: { url?: string
     </Button>
   );
 };
-
-

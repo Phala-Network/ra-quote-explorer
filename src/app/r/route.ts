@@ -1,5 +1,5 @@
-import { ofetch } from "ofetch"
-import { File } from 'formdata-node'
+import { ofetch } from "ofetch";
+import { File } from "formdata-node";
 
 function hexToUint8Array(hex: string) {
   hex = hex.trim();
@@ -26,9 +26,9 @@ function hexToUint8Array(hex: string) {
 
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url) 
-    const hex = searchParams.get('hex')!
-    const data = hexToUint8Array(hex)
+    const { searchParams } = new URL(req.url);
+    const hex = searchParams.get("hex")!;
+    const data = hexToUint8Array(hex);
     const blob = new Blob([data], { type: "application/octet-stream" });
     const file = new File([blob], "quote.bin", {
       type: "application/octet-stream",
@@ -44,9 +44,11 @@ export async function GET(req: Request) {
       },
     );
     if (response.success && response.checksum) {
-      return new Response('', { status: 301, headers: { location: `/reports/${response.checksum}` }})
+      return new Response("", {
+        status: 301,
+        headers: { location: `/reports/${response.checksum}` },
+      });
     }
-  } catch (err) {
-  }
-  return new Response('Bad Request', { status: 400 })
+  } catch (_) {}
+  return new Response("Bad Request", { status: 400 });
 }
