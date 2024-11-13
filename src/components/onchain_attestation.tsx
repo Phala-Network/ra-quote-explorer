@@ -275,7 +275,7 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
                     </Badge>
                   </AlertTitle>
 
-                  {verificationResult.decodedMessage && (
+                  {(!verificationResult.isValid && verificationResult.decodedMessage) && (
                     <div className="space-y-2">
                       <AlertTitle className="text-sm font-medium">
                         Decoded Message
