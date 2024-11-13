@@ -10,7 +10,7 @@ import {
   type Chain,
   type Hex,
 } from "viem";
-import { sepolia } from "viem/chains";
+import { sepolia, holesky } from "viem/chains";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,10 +41,59 @@ interface DcapVerifyFormProps {
   checksum: string;
 }
 
+const automataTestnet: Chain = {
+  id: 1398243,
+  name: 'Automata Testnet',
+  nativeCurrency: { name: 'ATA Coin', symbol: 'ATA', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://1rpc.io/ata/testnet'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Automata Testnet Explorer',
+      url: 'https://explorer-testnet.ata.network',
+      apiUrl: 'https://explorer-testnet.ata.network/api',
+    },
+  },
+  testnet: true,
+}
+
+const automataMainnet: Chain = {
+  id: 65536,
+  name: 'Automata Mainnet',
+  nativeCurrency: { name: 'ATA Coin', symbol: 'ATA', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.ata.network'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Automata Explorer',
+      url: 'https://explorer.ata.network',
+      apiUrl: 'https://explorer.ata.network/api',
+    },
+  },
+}
+
 const NETWORKS: Deployment[] = [
   {
     network: sepolia,
     contractAddress: "0x76A3657F2d6c5C66733e9b69ACaDadCd0B68788b",
+  },
+  {
+    network: holesky,
+    contractAddress: '0x133303659F51d75ED216FD98a0B70CbCD75339b2',
+  },
+  {
+    network: automataTestnet,
+    contractAddress: '0xefE368b17D137E86298eec8EbC5502fb56d27832',
+  },
+  {
+    network: automataMainnet,
+    contractAddress: '0xE26E11B257856B0bEBc4C759aaBDdea72B64351F',
   },
 ];
 

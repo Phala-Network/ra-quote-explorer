@@ -42,7 +42,7 @@ export function ReportView({
               variant="secondary"
             >
               <Bot className="h-4 w-4" />
-              <span>On-chain attestation with</span>
+              <span>Onchain attestation with</span>
               <img
                 src="https://raw.githubusercontent.com/automata-network/automata-brand-kit/main/PNG/ATA_Black%20Text%20with%20Color%20Logo.png"
                 className="h-9"

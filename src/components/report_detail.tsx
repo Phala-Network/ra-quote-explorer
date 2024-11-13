@@ -2,11 +2,9 @@ import {
   Cpu,
   Lock,
   Calendar,
-  ArrowLeft,
   Shield,
   ShieldOff,
 } from "lucide-react";
-import Link from "next/link";
 import {
   Card,
   CardHeader,
