@@ -5,9 +5,7 @@ export default async function ReportDisplayPage({
   params,
 }: { params: { checksum: string } }) {
   try {
-    const data = await ofetch(
-      `${process.env.API_PREFIX}/api/attestations/view/${params.checksum}`,
-    );
+    const data = await ofetch(`${process.env.API_PREFIX}/api/attestations/view/${params.checksum}`);
     if (!data) {
       return <div>Report not found</div>;
     }

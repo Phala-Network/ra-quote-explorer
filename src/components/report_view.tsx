@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { DownloadButton } from '@/components/download_button';
 import { cn } from '@/lib/utils'
 
 export interface TDXQuote {
@@ -46,6 +47,8 @@ export interface TDXQuote {
     reportdata: string;
   };
   verified: boolean;
+  checksum: string;
+  can_download: boolean;
 }
 
 const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
@@ -88,12 +91,15 @@ export function ReportView({ report }: { report: TDXQuote }) {
 
         <DcapVerificationStatus isVerified={report.verified} />
 
-        <Card className="mb-8">
+        <Card className="mb-8 relative">
           <CardHeader>
             <CardTitle>Report Overview</CardTitle>
             <CardDescription>
               Key information about the analyzed report
             </CardDescription>
+            <div className="absolute top-4 right-6">
+              <DownloadButton url={`/raw/${report.checksum}`} name={`${report.checksum}.bin`} isAvailable={!!report.can_download} />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
