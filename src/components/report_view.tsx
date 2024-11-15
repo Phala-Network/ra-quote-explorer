@@ -20,7 +20,7 @@ export function ReportView({
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto px-4 py-6 max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button
               asChild
@@ -38,7 +38,7 @@ export function ReportView({
           {activeView === "report" && report.can_download && (
             <Button
               onClick={() => setActiveView("attestation")}
-              className="gap-2 inline-flex flex-row items-center border border-black"
+              className="mt-4 md:mt-0 gap-2 inline-flex flex-row items-center border border-black"
               variant="secondary"
             >
               <Bot className="h-4 w-4" />

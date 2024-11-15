@@ -256,7 +256,7 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
             </Select>
           </div>
 
-          <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+          <div className="p-4 bg-gray-50 rounded-lg space-y-2 overflow-scroll">
             <div className="flex items-center justify-between">
               <span className="text-sm">Network:</span>
               <span className="font-medium">
@@ -265,7 +265,7 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Contract:</span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 pr-2">
                 <span className="font-mono text-sm truncate">
                   {selectedNetwork.contractAddress}
                 </span>
