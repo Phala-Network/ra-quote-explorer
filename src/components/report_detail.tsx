@@ -54,7 +54,6 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
 };
 
 export function ReportDetail({ report }: { report: TDXQuote }) {
-  console.log(report)
   return (
     <>
       <DcapVerificationStatus isVerified={report.verified} />
@@ -65,7 +64,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
           <CardDescription>
             Key information about the analyzed report
           </CardDescription>
-          <div className="absolute top-4 right-6">
+          <div className="md:absolute top-4 right-6">
             <DownloadButton
               url={`/raw/${report.checksum}`}
               name={`${report.checksum}.bin`}
@@ -75,19 +74,19 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="md:flex items-center">
+            <div className="flex items-center">
               <Shield className="mr-2 h-5 w-5 text-blue-500" />
               <span>Version: {report.header.version}</span>
             </div>
-            <div className="md:flex items-center">
+            <div className="flex items-center">
               <Calendar className="mr-2 h-5 w-5 text-green-500" />
               <span>AK Type: {report.header.ak_type}</span>
             </div>
-            <div className="md:flex items-center">
+            <div className="flex items-center">
               <Cpu className="mr-2 h-5 w-5 text-purple-500" />
               <span>TEE Type: {report.header.tee_type}</span>
             </div>
-            <div className="md:flex items-center">
+            <div className="flex items-center">
               <Lock className="mr-2 h-5 w-5 text-red-500" />
               <span>Uploaded At: <TimeDisplay isoString={report.uploaded_at} /></span>
             </div>
@@ -125,7 +124,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
             <CardTitle>Certificate Data</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="font-mono break-all">{report.cert_data}</pre>
+            <pre className="font-mono break-all max-w-full overflow-x-scroll">{report.cert_data}</pre>
           </CardContent>
         </Card>
       ) : null}
