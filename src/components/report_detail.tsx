@@ -124,7 +124,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell className="font-mono">Decoded Report Data</TableCell>
+                <TableCell className="font-mono">Report Data Raw Input</TableCell>
                 <TableCell className="font-mono break-all">{hexToString(report.body.reportdata)}</TableCell>
               </TableRow>
             </TableBody>
