@@ -26,6 +26,16 @@ import { cn } from "@/lib/utils";
 import { type TDXQuote } from "@/types";
 import { TimeDisplay } from './time_display'
 
+function hexToString(input: string): string {
+ // Remove 0x prefix if exists
+ const hex = input.startsWith('0x') ? input.slice(2) : input;
+ 
+ // Convert hex to string and trim null bytes
+ return Buffer.from(hex, 'hex')
+   .toString()
+   .replace(/\x00+$/, '');
+}
+
 const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   return (
     <Alert
@@ -113,6 +123,10 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                   <TableCell className="font-mono break-all">{value}</TableCell>
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell className="font-mono">Decoded Report Data</TableCell>
+                <TableCell className="font-mono break-all">{hexToString(report.body.reportdata)}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </CardContent>
