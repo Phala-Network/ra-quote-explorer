@@ -11,7 +11,7 @@ import {
   type Hex,
 } from "viem";
 import { sepolia, holesky } from "viem/chains";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -224,7 +224,14 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>DCAP Verification</CardTitle>
+          <CardTitle>Onchain Verification</CardTitle>
+          <CardDescription className="flex flex-row gap-1.5 items-center">
+            Powered by
+            <img
+              src="https://raw.githubusercontent.com/automata-network/automata-brand-kit/main/PNG/ATA_Black%20Text%20with%20Color%20Logo.png"
+              className="h-9"
+            />
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">

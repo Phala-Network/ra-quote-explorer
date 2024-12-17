@@ -44,11 +44,7 @@ export function ReportView({
               variant="secondary"
             >
               <Bot className="h-4 w-4" />
-              <span>Onchain attestation with</span>
-              <img
-                src="https://raw.githubusercontent.com/automata-network/automata-brand-kit/main/PNG/ATA_Black%20Text%20with%20Color%20Logo.png"
-                className="h-9"
-              />
+              <span>Onchain attestation</span>
             </Button>
           )}
         </div>
@@ -69,7 +65,7 @@ export function ReportView({
                 </TabsTrigger>
                 <TabsTrigger value="attestation" className="gap-2">
                   <Bot className="h-4 w-4" />
-                  Attestation
+                  Onchain Attestation
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -83,7 +79,7 @@ export function ReportView({
             <DcapVerifyForm checksum={checksum} />
           )}
         </div>
-        <footer>
+        <footer className="mt-4">
           <div className="flex flex-inline gap-1.5 justify-center items-center">
             <img src="/apple-touch-icon.png" className="w-5 h-5 rounded-full overflow-hidden" />
             <p className="text-gray-500 text-sm">Developed by the <a href="https://phala.network" target="_blank" className="underline">Phala team</a></p>
