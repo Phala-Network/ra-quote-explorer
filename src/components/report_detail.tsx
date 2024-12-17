@@ -5,6 +5,8 @@ import {
   Shield,
   ShieldOff,
 } from "lucide-react";
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardHeader,
@@ -83,7 +85,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4 border-b border-gray-200 pb-4">
             <div className="flex items-center">
               <Shield className="mr-2 h-5 w-5 text-blue-500" />
               <span>Version: {report.header.version}</span>
@@ -100,6 +102,13 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
               <Lock className="mr-2 h-5 w-5 text-red-500" />
               <span>Uploaded At: <TimeDisplay isoString={report.uploaded_at} /></span>
             </div>
+          </div>
+          <div className="flex flex-row justify-end mt-1.5">
+            <Button asChild variant="link" className="text-gray-600">
+              <Link href="https://phala.netwwork" target="_blank">
+                Learn more about TEE Attestation on <img src="/apple-touch-icon.png" className="w-4 h-4 rounded-full overflow-hidden" /> Phala
+              </Link>
+            </Button>
           </div>
         </CardContent>
       </Card>

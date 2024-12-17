@@ -18,8 +18,8 @@ export function ReportView({
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto px-4 py-6 max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 pb-6 max-w-4xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button
@@ -32,7 +32,9 @@ export function ReportView({
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
-            <h1 className="text-xl font-semibold">Report Details</h1>
+            <h1 className="text-xl font-semibold">
+              TEE Attestation Explorer
+            </h1>
           </div>
 
           {activeView === "report" && report.can_download && (
@@ -81,6 +83,12 @@ export function ReportView({
             <DcapVerifyForm checksum={checksum} />
           )}
         </div>
+        <footer>
+          <div className="flex flex-inline gap-1.5 justify-center items-center">
+            <img src="/apple-touch-icon.png" className="w-5 h-5 rounded-full overflow-hidden" />
+            <p className="text-gray-500 text-sm">Developed by the <a href="https://phala.network" target="_blank" className="underline">Phala team</a></p>
+          </div>
+        </footer>
       </div>
     </div>
   );

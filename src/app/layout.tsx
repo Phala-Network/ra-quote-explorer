@@ -3,8 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "TEE Attestation Explorer",
-    template: "%s | TEE Attestation Explorer",
+    default: "TEE Attestation Explorer by Phala",
+    template: "%s | TEE Attestation Explorer by Phala",
   },
   description:
     "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with TEE Attestation Explorer.",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     "Analysis",
     "dstack",
     "TEE Attestation Explorer",
+    "RA Quote Explorer",
   ],
   authors: [{ name: "PhalaNetwork" }],
   creator: "PhalaNetwork",
@@ -28,8 +29,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    // url: 'https://www.example.com',
-    siteName: "TEE Attestation Explorer",
+    url: 'https://proof.t16z.com',
+    siteName: "TEE Attestation Explorer by Phala",
     title: "TEE Attestation Explorer",
     description:
       "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments.",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TEE Attestation Explorer",
+    title: "TEE Attestation Explorer by Phala",
     description:
       "Secure and comprehensive analysis for TEE attestation reports.",
     // images: ['https://www.example.com/twitter-image.jpg'],
@@ -65,7 +66,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

@@ -15,7 +15,7 @@ export function UploadView() {
           TEE Attestation Explorer
         </h1>
         <p className="mt-5 text-xl text-gray-500">
-          Verify and analyze Intel SGX and TD attestation reports with precision
+          Verify and analyze Intel SGX and TD attestation reports with ❤️ by <a href="https://phala.network" target="_blank">Phala</a>
         </p>
       </div>
 
