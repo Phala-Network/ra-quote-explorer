@@ -45,16 +45,27 @@ async function isIPBlocked(ip: string): Promise<boolean> {
   return !!blockedUntil && Date.now() < Number(blockedUntil);
 }
 
-async function checkThreshold(ip: string): Promise<boolean> {
-  const key = `threshold:${ip}`;
+async function incrementRequestCount(ip: string): Promise<{
+  count: number;
+  remaining: number;
+  reset: number;
+}> {
+  const key = `requests:${ip}`;
   const count = await redis.incr(key);
   
   // Set expiration on first request
   if (count === 1) {
     await redis.expire(key, THRESHOLD_WINDOW);
   }
+
+  // Get TTL for reset time
+  const ttl = await redis.ttl(key);
   
-  return count <= MAX_REQUESTS_PER_WINDOW;
+  return {
+    count,
+    remaining: Math.max(0, MAX_REQUESTS_PER_WINDOW - count),
+    reset: ttl > 0 ? ttl : THRESHOLD_WINDOW
+  };
 }
 
 async function incrementErrorCount(ip: string): Promise<number> {
@@ -89,15 +100,23 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check request threshold
-    if (!(await checkThreshold(ip))) {
+    // Increment and check request count for all requests
+    const rateLimit = await incrementRequestCount(ip);
+    const rateLimitHeaders = {
+      'X-RateLimit-Limit': MAX_REQUESTS_PER_WINDOW.toString(),
+      'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+      'X-RateLimit-Reset': rateLimit.reset.toString(),
+      'Content-Type': "application/json",
+    };
+
+    if (rateLimit.count > MAX_REQUESTS_PER_WINDOW) {
       return new Response(
         JSON.stringify({ error: "Too many requests. Please try again later." }), 
         { 
           status: 429,
-          headers: { 
-            "Content-Type": "application/json",
-            "Retry-After": THRESHOLD_WINDOW.toString()
+          headers: {
+            ...rateLimitHeaders,
+            "Retry-After": rateLimit.reset.toString()
           },
         }
       );
@@ -112,7 +131,7 @@ export async function POST(req: Request) {
         JSON.stringify({ error: "Please upload a file" }), 
         { 
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: rateLimitHeaders,
         }
       );
     }
@@ -128,7 +147,7 @@ export async function POST(req: Request) {
         }), 
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: rateLimitHeaders,
         }
       );
     }
@@ -143,7 +162,7 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: rateLimitHeaders,
     });
   } catch (error) {
     console.error("Error:", error);
