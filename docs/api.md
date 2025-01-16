@@ -2,7 +2,7 @@
 
 ## File Upload API
 
-Upload a file for verification. This endpoint implements rate limiting and file size restrictions.
+Upload a file or hex string for verification. This endpoint implements rate limiting and size restrictions.
 
 ### Endpoint
 
@@ -14,12 +14,16 @@ POST /api/upload
 
 - Content-Type: `multipart/form-data`
 - Max file size: 20KB
+- Max hex string length: 40KB (20KB in bytes)
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| file | File | Yes | The file to be verified |
+| file | File | No* | The file to be verified |
+| hex | String | No* | Hex string to be verified (without '0x' prefix) |
+
+\* Either `file` or `hex` must be provided, but not both.
 
 ### Response
 
@@ -46,10 +50,10 @@ POST /api/upload
 #### Error Responses
 
 ##### Bad Request (400)
-When file is missing or invalid:
+When input is missing or invalid:
 <pre>
 {
-  "error": "Please upload a file",
+  "error": "Please provide either a file or hex string",
   "remainingAttempts": 4
 }
 </pre>
@@ -79,9 +83,19 @@ When IP is blocked due to too many validation errors:
 ### Example
 
 Using curl:
+
+For file upload:
 <pre>
 curl -X POST \
   -F "file=@/path/to/your/file.txt" \
+  -i \
+  http://proof.t16z.com/api/upload
+</pre>
+
+For hex string:
+<pre>
+curl -X POST \
+  -F "hex=1234abcd" \
   -i \
   http://proof.t16z.com/api/upload
 </pre>
@@ -107,22 +121,25 @@ def upload_file(file_path):
     else:
         print(f"Error: {response.json()['error']}")
 
-# Raw Data Verification Example
-def verify_hex_data(hex_string):
+# Hex String Upload Example
+def upload_hex_string(hex_string):
     # Remove '0x' prefix if present
     hex_string = hex_string.removeprefix('0x')
-    url = f'http://proof.t16z.com/raw/{hex_string}'
+    url = 'http://proof.t16z.com/api/upload'
     
-    response = requests.get(url, allow_redirects=False)
-    if response.status_code == 301:
-        report_url = response.headers['Location']
-        print(f"Success! Redirecting to report: {report_url}")
+    data = {'hex': hex_string}
+    response = requests.post(url, data=data)
+    
+    if response.status_code == 200:
+        data = response.json()
+        print(f"Success! Report URL: {data['url']}")
+        print(f"Checksum: {data['checksum']}")
     else:
-        print("Error: Invalid hex string")
+        print(f"Error: {response.json()['error']}")
 
 # Usage examples
 upload_file('path/to/your/file.txt')
-verify_hex_data('0x1234abcd')
+upload_hex_string('0x1234abcd')
 ```
 
 #### Python Async Example (with asyncio + httpx)
@@ -150,28 +167,30 @@ async def upload_file_async(file_path: str | Path):
             print(f"Error: {response.json()['error']}")
             return None
 
-# Raw Data Verification Example
-async def verify_hex_data_async(hex_string: str):
+# Hex String Upload Example
+async def upload_hex_string_async(hex_string: str):
     # Remove '0x' prefix if present
     hex_string = hex_string.removeprefix('0x')
-    url = f'http://proof.t16z.com/raw/{hex_string}'
+    url = 'http://proof.t16z.com/api/upload'
     
-    async with httpx.AsyncClient(follow_redirects=False) as client:
-        response = await client.get(url)
+    async with httpx.AsyncClient() as client:
+        data = {'hex': hex_string}
+        response = await client.post(url, data=data)
         
-        if response.status_code == 301:
-            report_url = response.headers['Location']
-            print(f"Success! Redirecting to report: {report_url}")
-            return report_url
+        if response.status_code == 200:
+            data = response.json()
+            print(f"Success! Report URL: {data['url']}")
+            print(f"Checksum: {data['checksum']}")
+            return data
         else:
-            print("Error: Invalid hex string")
+            print(f"Error: {response.json()['error']}")
             return None
 
 # Usage examples
 async def main():
     # Single request
     await upload_file_async('path/to/your/file.txt')
-    await verify_hex_data_async('0x1234abcd')
+    await upload_hex_string_async('0x1234abcd')
     
     # Parallel requests
     files_to_upload = ['file1.txt', 'file2.txt']
@@ -181,12 +200,13 @@ async def main():
     upload_tasks = [upload_file_async(f) for f in files_to_upload]
     upload_results = await asyncio.gather(*upload_tasks)
     
-    # Verify multiple hex strings concurrently
-    verify_tasks = [verify_hex_data_async(h) for h in hex_strings]
-    verify_results = await asyncio.gather(*verify_tasks)
+    # Upload multiple hex strings concurrently
+    hex_tasks = [upload_hex_string_async(h) for h in hex_strings]
+    hex_results = await asyncio.gather(*hex_tasks)
 
 if __name__ == '__main__':
     asyncio.run(main())
+```
 
 #### Node.js Example
 
@@ -219,42 +239,51 @@ async function uploadFile(filePath) {
   }
 }
 
-// Raw Data Verification Example
-async function verifyHexData(hexString) {
+// Hex String Upload Example
+async function uploadHexString(hexString) {
+  const FormData = require('form-data');
+  const fetch = require('node-fetch');
+
   // Remove '0x' prefix if present
   hexString = hexString.replace(/^0x/, '');
   
+  const form = new FormData();
+  form.append('hex', hexString);
+
   try {
-    const response = await fetch(`http://proof.t16z.com/raw/${hexString}`, {
-      redirect: 'manual' // Prevent auto-redirect to handle it manually
+    const response = await fetch('http://proof.t16z.com/api/upload', {
+      method: 'POST',
+      body: form
     });
 
-    if (response.status === 301) {
-      const reportUrl = response.headers.get('location');
-      console.log(`Success! Redirecting to report: ${reportUrl}`);
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log(`Success! Report URL: ${data.url}`);
+      console.log(`Checksum: ${data.checksum}`);
     } else {
-      console.error('Error: Invalid hex string');
+      console.error(`Error: ${data.error}`);
     }
   } catch (error) {
-    console.error('Verification failed:', error);
+    console.error('Upload failed:', error);
   }
 }
 
 // Usage examples
 uploadFile('path/to/your/file.txt');
-verifyHexData('0x1234abcd');
+uploadHexString('0x1234abcd');
 ```
 
 #### Browser JavaScript Example
 
 ```javascript
 // File Upload Example
-async function uploadFile(fileInput) {
+async function uploadFile(file) {
   const formData = new FormData();
-  formData.append('file', fileInput.files[0]);
+  formData.append('file', file);
 
   try {
-    const response = await fetch('/api/upload', {
+    const response = await fetch('http://proof.t16z.com/api/upload', {
       method: 'POST',
       body: formData
     });
@@ -272,28 +301,43 @@ async function uploadFile(fileInput) {
   }
 }
 
-// Raw Data Verification Example
-async function verifyHexData(hexString) {
+// Hex String Upload Example
+async function uploadHexString(hexString) {
   // Remove '0x' prefix if present
   hexString = hexString.replace(/^0x/, '');
   
+  const formData = new FormData();
+  formData.append('hex', hexString);
+
   try {
-    const response = await fetch(`/raw/${hexString}`);
-    if (response.redirected) {
-      window.location.href = response.url;
+    const response = await fetch('http://proof.t16z.com/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log(`Success! Report URL: ${data.url}`);
+      console.log(`Checksum: ${data.checksum}`);
     } else {
-      console.error('Error: Invalid hex string');
+      console.error(`Error: ${data.error}`);
     }
   } catch (error) {
-    console.error('Verification failed:', error);
+    console.error('Upload failed:', error);
   }
 }
 
-// Usage examples with HTML
-/*
-<input type="file" id="fileInput" onChange="uploadFile(this)">
-<button onClick="verifyHexData('0x1234abcd')">Verify Hex</button>
-*/
+// Usage examples with file input
+document.querySelector('input[type="file"]').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    uploadFile(file);
+  }
+});
+
+// Usage example with hex string
+uploadHexString('0x1234abcd');
 ```
 
 ## Raw Data Verification API
@@ -345,4 +389,5 @@ if (response.redirected) {
 Example valid hex strings:
 - "1234abcd"
 - "0x1234abcd"
+- "DEADBEEF"
 - "DEADBEEF"

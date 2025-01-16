@@ -23,15 +23,24 @@ const MAX_REQUESTS_PER_WINDOW = 10;  // Maximum requests per window
 const THRESHOLD_WINDOW = 60;  // 1 minute window (in seconds)
 
 // Create validation schema
-const UploadSchema = z.object({
-  file: z.instanceof(File).refine(
-    (file) => file.size <= MAX_FILE_SIZE,
-    `File size cannot exceed ${MAX_FILE_SIZE / 1024}KB`
-  ).refine(
-    (file) => file.size > 0,
-    `File cannot be empty`
-  ),
-});
+const HexStringSchema = z.string().refine(
+  (str) => {
+    const hexRegex = /^[0-9a-fA-F]*$/;
+    return hexRegex.test(str) && str.length <= MAX_FILE_SIZE * 2; // Each byte is 2 hex chars
+  },
+  `Hex string must be valid and not exceed ${MAX_FILE_SIZE * 2} characters`
+).refine(
+  (str) => str.length > 0,
+  `Hex string cannot be empty`
+);
+
+const FileSchema = z.instanceof(File).refine(
+  (file) => file.size <= MAX_FILE_SIZE,
+  `File size cannot exceed ${MAX_FILE_SIZE / 1024}KB`
+).refine(
+  (file) => file.size > 0,
+  `File cannot be empty`
+);
 
 async function getClientIP(): Promise<string> {
   const headersList = headers();
@@ -124,11 +133,12 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
     const file = formData.get('file');
+    const hexString = formData.get('hex');
 
-    if (!file) {
+    if (!file && !hexString) {
       await incrementErrorCount(ip);
       return new Response(
-        JSON.stringify({ error: "Please upload a file" }), 
+        JSON.stringify({ error: "Please provide either a file or hex string" }), 
         { 
           status: 400,
           headers: rateLimitHeaders,
@@ -136,13 +146,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate file
-    const result = UploadSchema.safeParse({ file });
-    if (!result.success) {
+    // Validate input based on what was provided
+    let validationResult: { success: boolean; data?: File | string; error?: z.ZodError };
+    if (file) {
+      const result = FileSchema.safeParse(file);
+      validationResult = result;
+    } else {
+      const result = HexStringSchema.safeParse(hexString?.toString() || '');
+      validationResult = result;
+    }
+
+    if (!validationResult.success) {
       const errorCount = await incrementErrorCount(ip);
       return new Response(
         JSON.stringify({ 
-          error: result.error.errors[0].message,
+          error: validationResult.error!.errors[0].message,
           remainingAttempts: Math.max(0, MAX_ERRORS_PER_IP - errorCount)
         }), 
         {
@@ -152,11 +170,22 @@ export async function POST(req: Request) {
       );
     }
 
+    // Prepare form data for API request
+    const apiFormData = new FormData();
+    if (hexString) {
+      // Convert hex string to blob and append as file
+      const bytes = new Uint8Array((validationResult.data as string).match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+      const blob = new Blob([bytes]);
+      apiFormData.append('file', blob);
+    } else {
+      apiFormData.append('file', validationResult.data as File);
+    }
+
     const response = await ofetch(
       `${process.env.API_PREFIX}/api/attestations/verify`,
       {
         method: "POST",
-        body: formData,
+        body: apiFormData,
       },
     );
     response.url = `https://proof.t16z.com/reports/${response.checksum}`;
