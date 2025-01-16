@@ -159,6 +159,7 @@ export async function POST(req: Request) {
         body: formData,
       },
     );
+    response.url = `https://proof.t16z.com/reports/${response.checksum}`;
 
     return new Response(JSON.stringify(response), {
       status: 200,
