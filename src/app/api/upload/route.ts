@@ -1,7 +1,14 @@
 import { ofetch } from "ofetch";
 import { z } from "zod";
-import { kv } from '@vercel/kv';
 import { headers } from 'next/headers';
+import Redis from 'ioredis';
+
+if (!process.env.REDIS_URL) {
+  throw new Error('REDIS_URL is not defined');
+}
+
+// Initialize Redis client
+const redis = new Redis(process.env.REDIS_URL);
 
 // Define maximum file size (20KB)
 const MAX_FILE_SIZE = 20 * 1024;
@@ -34,17 +41,17 @@ async function getClientIP(): Promise<string> {
 }
 
 async function isIPBlocked(ip: string): Promise<boolean> {
-  const blockedUntil = await kv.get(`blocked:${ip}`);
+  const blockedUntil = await redis.get(`blocked:${ip}`);
   return !!blockedUntil && Date.now() < Number(blockedUntil);
 }
 
 async function checkThreshold(ip: string): Promise<boolean> {
   const key = `threshold:${ip}`;
-  const count = await kv.incr(key);
+  const count = await redis.incr(key);
   
   // Set expiration on first request
   if (count === 1) {
-    await kv.expire(key, THRESHOLD_WINDOW);
+    await redis.expire(key, THRESHOLD_WINDOW);
   }
   
   return count <= MAX_REQUESTS_PER_WINDOW;
@@ -52,16 +59,16 @@ async function checkThreshold(ip: string): Promise<boolean> {
 
 async function incrementErrorCount(ip: string): Promise<number> {
   const key = `errors:${ip}`;
-  const count = await kv.incr(key);
+  const count = await redis.incr(key);
   
   // Set expiration on first error
   if (count === 1) {
-    await kv.expire(key, ERROR_WINDOW);
+    await redis.expire(key, ERROR_WINDOW);
   }
   
   // If error count exceeds limit, block the IP
   if (count >= MAX_ERRORS_PER_IP) {
-    await kv.set(`blocked:${ip}`, Date.now() + BLOCK_DURATION * 1000);
+    await redis.set(`blocked:${ip}`, Date.now() + BLOCK_DURATION * 1000, 'EX', BLOCK_DURATION);
   }
   
   return count;
