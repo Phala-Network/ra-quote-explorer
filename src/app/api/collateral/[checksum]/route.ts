@@ -12,7 +12,7 @@ export async function GET(
     throw new Error("API_PREFIX environment variable is not set");
   }
   const response = await fetch(
-    `${apiPrefix}/api/collateral/${params.checksum}`,
+    `${apiPrefix}/collateral/${params.checksum}`,
   );
 
   return new Response(response.body, {
