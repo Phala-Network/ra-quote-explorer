@@ -4,6 +4,7 @@ import {
   Calendar,
   Shield,
   ShieldOff,
+  Download,
 } from "lucide-react";
 import {
   Card,
@@ -74,12 +75,25 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
           <CardDescription>
             This is a {report.header.tee_type == 'TEE_TDX' ? 'Intel TDX' : 'Intel SGX'} DCAP attestation.
           </CardDescription>
-          <div className="md:absolute top-4 right-6">
+          <div className="md:absolute top-4 right-6 flex flex-col md:flex-row gap-0.5">
             <DownloadButton
               url={`/raw/${report.checksum}`}
-              name={`${report.checksum}.bin`}
+              name={`${report.checksum}_quote.bin`}
               isAvailable={!!report.can_download}
-            />
+              className="w-40"
+            >
+              <Download className="h-4 w-4" />
+              Download Quote
+            </DownloadButton>
+            <DownloadButton
+              url={`/api/collateral/${report.checksum}`}
+              name={`${report.checksum}_quote_collateral.json`}
+              isAvailable={!!report.can_download}
+              className="w-56"
+            >
+              <Download className="h-4 w-4" />
+              Download Quote Collateral
+            </DownloadButton>
           </div>
         </CardHeader>
         <CardContent>

@@ -1,5 +1,4 @@
 "use client";
-import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -7,7 +6,9 @@ export const DownloadButton = ({
   url,
   name,
   isAvailable = true,
-}: { url?: string; name: string; isAvailable: boolean }) => {
+  className,
+  children
+}: { url?: string; name: string; isAvailable?: boolean, className?: string, children: React.ReactNode }) => {
   const handleDownload = async () => {
     if (!url) {
       return;
@@ -33,14 +34,9 @@ export const DownloadButton = ({
       onClick={handleDownload}
       disabled={!isAvailable}
       variant="outline"
-      className="w-40"
+      className={className}
     >
-      {isAvailable ? (
-        <>
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </>
-      ) : (
+      {isAvailable ? children : (
         "raw quote unavailable"
       )}
     </Button>
