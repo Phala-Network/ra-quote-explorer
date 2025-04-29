@@ -182,7 +182,7 @@ export async function POST(req: Request) {
     }
 
     const response = await ofetch(
-      `${process.env.API_PREFIX}/api/attestations/verify`,
+      `${process.env.API_PREFIX}/attestations/verify`,
       {
         method: "POST",
         body: apiFormData,

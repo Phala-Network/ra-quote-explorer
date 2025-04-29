@@ -32,7 +32,7 @@ async function handleRequest(
 
   try {
     const response = await fetch(
-      `${apiPrefix}/api/attestations/raw/${checksum}`,
+      `${apiPrefix}/attestations/raw/${checksum}`,
       {
         method,
         headers: {

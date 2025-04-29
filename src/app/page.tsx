@@ -4,7 +4,7 @@ import { RecentAttestations } from "@/components/recent_attestations";
 
 export default function Home() {
   const items = use(
-    fetch(`${process.env.API_PREFIX}/api/attestations/recent`, {
+    fetch(`${process.env.API_PREFIX}/attestations/recent`, {
       cache: "no-store",
     }).then((res) => res.json()),
   );
