@@ -129,6 +129,61 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
   const [verificationResult, setVerificationResult] =
     useState<VerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [zkVerifyStatus, setZkVerifyStatus] = useState<string | null>("Verify with zkVerify");
+  const [zkVerifyTxHash, setZkVerifyTxHash] = useState<string | null>(null);
+
+  const zkVerify = async() => {
+
+    const response = await fetch(`/raw/${checksum}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch quote: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const quoteBuffer = await response.arrayBuffer();
+    const quoteHex = `0x${Buffer.from(quoteBuffer).toString("hex")}` as Hex;
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"quote": quoteHex})
+    };
+    
+    console.log(`${process.env.NEXT_PUBLIC_ZKVERIFY_URL}/prove`);
+    let zkVerifyResponse = await fetch(`${process.env.NEXT_PUBLIC_ZKVERIFY_URL}/prove`, options);
+    let resData = await zkVerifyResponse.json();
+
+    if(resData.status === "Completed"){
+      setZkVerifyStatus("Verification completed successfully !!!");
+      setZkVerifyTxHash(resData.data.tx_hash);
+      return;
+    }
+
+    const taskId = resData.task_id;
+    
+    setZkVerifyStatus("Validating quote ...");
+
+    while(true){
+      zkVerifyResponse = await fetch(`${process.env.NEXT_PUBLIC_ZKVERIFY_URL}/status/${taskId}`);
+      resData = await zkVerifyResponse.json();
+
+      if (resData.status === "Processing") {
+        setZkVerifyStatus("Proving quote ...");
+      } else if (resData.status === "Verifying") {
+        setZkVerifyStatus("Verification in progress ...");
+      } else if (resData.status === "Completed") {
+        setZkVerifyStatus("Verification completed successfully !!!");
+        setZkVerifyTxHash(resData.data.tx_hash);
+        break;
+      }
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Poll every 5 seconds
+    }
+
+
+  }
 
   const onChainDcapVerify = async (
     network: Deployment,
@@ -222,6 +277,76 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
 
   return (
     <div className="space-y-4">
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Onchain Verification</CardTitle>
+          <CardDescription className="flex flex-row gap-1.5 items-center">
+            Powered by zkVerify
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+
+          <Button
+            onClick={zkVerify}
+            disabled={isPending}
+            className="w-full"
+          >
+            {zkVerifyStatus}
+          </Button>
+
+          {error && (
+            <Alert variant="destructive">
+              <AlertTitle>Verification Failed</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {(zkVerifyStatus==="Verification completed successfully !!!") && (
+            <Alert
+              variant={"default"}
+              className={
+                "border-green-200 bg-green-50"
+              }
+            >
+              <div className="flex items-start space-x-2">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+
+                <div className="space-y-3 w-full">
+                  <AlertTitle className="flex items-center justify-between">
+                    <span>Verification Result</span>
+                    <Badge
+                      variant={
+                        "default"
+                      }
+                      className={
+                        "bg-green-600"
+                      }
+                    >
+                      {"Valid"}
+                    </Badge>
+                  </AlertTitle>
+
+                  <div className="space-y-2">
+                    <AlertTitle className="text-sm font-medium">
+                      zkVerify Transaction
+                    </AlertTitle>
+                    <AlertDescription>
+                      <a href= {`https://zkverify-testnet.subscan.io/extrinsic/${zkVerifyTxHash}`}>
+                      <div className="bg-white/50 p-3 rounded-md border font-mono text-sm break-all">
+                        {`https://zkverify-testnet.subscan.io/extrinsic/${zkVerifyTxHash}`}
+                      </div>
+                      </a>
+                    </AlertDescription>
+                  </div>
+                </div>
+              </div>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
+      
       <Card>
         <CardHeader>
           <CardTitle>Onchain Verification</CardTitle>
