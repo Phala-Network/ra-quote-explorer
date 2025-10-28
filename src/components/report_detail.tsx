@@ -78,8 +78,8 @@ const ProofOfCloudNote = () => {
 
 const MEASUREMENTS = [
   {
-    field: 'User Data',
-    description: 'Application-specific data provided during attestation generation',
+    field: 'PPID',
+    description: 'Provisioning Platform ID',
     key: 'user_data',
     source: 'header' as const
   },
