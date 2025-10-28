@@ -5,6 +5,7 @@ import {
   Shield,
   ShieldOff,
   Download,
+  AlertTriangle,
 } from "lucide-react";
 import {
   Card,
@@ -41,7 +42,7 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   return (
     <Alert
       variant={isVerified ? "default" : "destructive"}
-      className={cn("mb-8", isVerified ? "bg-green-50" : "bg-yellow-50")}
+      className={cn("mb-6", isVerified ? "bg-green-50" : "bg-yellow-50")}
     >
       <div className="flex items-center gap-3">
         {isVerified ? (
@@ -64,10 +65,36 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   );
 };
 
+const ProofOfCloudNote = () => {
+  return (
+    <div className="mb-6 px-4 py-3 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
+      <div className="flex items-start gap-2.5">
+        <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+        <div className="flex-1">
+          <p className="text-sm text-slate-700 leading-relaxed">
+            <span className="font-semibold">Proof of Cloud:</span> This device is not in our verified facilities registry.{" "}
+            <a
+              href="https://proofofcloud.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline font-medium"
+            >
+              Learn more
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export function ReportDetail({ report }: { report: TDXQuote }) {
+  const showProofOfCloudNote = report.verified && report.proof_of_cloud === false;
+
   return (
     <>
       <DcapVerificationStatus isVerified={report.verified} />
+      {showProofOfCloudNote && <ProofOfCloudNote />}
 
       <Card className="mb-8 relative">
         <CardHeader>

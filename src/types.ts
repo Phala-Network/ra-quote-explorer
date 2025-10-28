@@ -25,6 +25,7 @@ export interface TDXQuote {
     reportdata: string;
   };
   verified: boolean;
+  proof_of_cloud?: boolean;
   checksum: string;
   can_download: boolean;
   uploaded_at: string;
