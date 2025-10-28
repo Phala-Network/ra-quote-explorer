@@ -19,7 +19,7 @@ export function RecentAttestations({
   items,
 }: { items: { checksum: string; created_at: string; verified: boolean }[] }) {
   return (
-    <Card className="max-w-4xl mx-auto mt-8">
+    <Card className="max-w-4xl mx-auto shadow-sm">
       <CardHeader>
         <CardTitle>Recent Attestations</CardTitle>
       </CardHeader>
@@ -37,14 +37,14 @@ export function RecentAttestations({
                 <TableCell className="font-mono flex flex-row gap-1.5 items-center">
                   {item.verified ? (
                     <Badge className="flex flex-row gap-2" variant="success">
-                      <Shield className="h-4 w-4 text-green-500" />
+                      <Shield className="h-4 w-4 text-success-foreground" />
                     </Badge>
                   ) : (
                     <Badge className="flex flex-row gap-2" variant="destructive">
-                      <ShieldOff className="h-4 w-4 text-white" />
+                      <ShieldOff className="h-4 w-4 text-destructive-foreground" />
                     </Badge>
                   )}
-                  <Link href={`/reports/${item.checksum}`}>
+                  <Link href={`/reports/${item.checksum}`} className="hover:text-primary transition-colors">
                     {item.checksum}
                   </Link>
                 </TableCell>

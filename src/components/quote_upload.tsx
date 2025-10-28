@@ -71,47 +71,76 @@ export function QuoteUpload() {
   const router = useRouter();
   return (
     <form>
-      <Tabs defaultValue="hex" className="">
-        <TabsList>
+      <Tabs defaultValue="hex" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="hex" onClick={() => setHasError(false)}>
-            Hex Quote
+            Hex Text
           </TabsTrigger>
           <TabsTrigger value="file" onClick={() => setHasError(false)}>
-            Upload the Quote File
+            Binary File
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="hex">
-          <Card>
-            <CardHeader>
-              <CardTitle>Hex Quote</CardTitle>
-              <CardDescription>
-                You can paste the hex text of the attestation quote here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {hasError ? (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>The quote is invalid.</AlertDescription>
-                </Alert>
-              ) : null}
 
-              <div className="space-y-1">
-                <Textarea
-                  rows={10}
-                  className="font-mono"
-                  onChange={(e) => setHex(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                onClick={async (evt) => {
-                  evt.preventDefault();
+        <TabsContent value="hex" className="space-y-4">
+          {hasError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>The quote is invalid.</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Paste hex quote</label>
+            <Textarea
+              rows={10}
+              className="font-mono text-xs"
+              placeholder="0x03000200000000000a00..."
+              onChange={(e) => setHex(e.target.value)}
+            />
+          </div>
+
+          <Button
+            onClick={async (evt) => {
+              evt.preventDefault();
+              try {
+                const data = hexToUint8Array(hex);
+                const { success, checksum } = await uploadUint8Array(data);
+                if (success) {
+                  router.push(`/reports/${checksum}`);
+                } else {
+                  setHasError(true);
+                }
+              } catch (error) {
+                console.error(error);
+                setHasError(true);
+              }
+            }}
+          >
+            Verify
+          </Button>
+        </TabsContent>
+
+        <TabsContent value="file" className="space-y-4">
+          {hasError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>The quote is invalid.</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Upload quote file</label>
+            <input
+              type="file"
+              id="attestation-file"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) {
                   try {
-                    const data = hexToUint8Array(hex);
-                    const { success, checksum } = await uploadUint8Array(data);
+                    const { success, checksum } = await uploadFile(file);
                     if (success) {
                       router.push(`/reports/${checksum}`);
                     } else {
@@ -119,60 +148,18 @@ export function QuoteUpload() {
                     }
                   } catch (error) {
                     console.error(error);
+                    setHasError(true);
                   }
-                }}
-              >
-                Verify
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="file">
-          <Card>
-            <CardHeader>
-              <CardTitle>Upload the Quote File</CardTitle>
-              <CardDescription>
-                You can upload the attestation quote file here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {hasError ? (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>The quote is invalid.</AlertDescription>
-                </Alert>
-              ) : null}
-              <div className="space-y-1">
-                <input
-                  type="file"
-                  id="attestation-file"
-                  className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      try {
-                        const { success, checksum } = await uploadFile(file);
-                        if (success) {
-                          router.push(`/reports/${checksum}`);
-                        } else {
-                          setHasError(true);
-                        }
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }
-                  }}
-                />
-                <Button asChild>
-                  <label htmlFor="attestation-file">
-                    <Upload className="mr-2 h-5 w-5" />
-                    Upload Attestation Quote
-                  </label>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                }
+              }}
+            />
+            <Button asChild className="w-full">
+              <label htmlFor="attestation-file" className="cursor-pointer">
+                <Upload className="mr-2 h-5 w-5" />
+                Select File
+              </label>
+            </Button>
+          </div>
         </TabsContent>
       </Tabs>
     </form>

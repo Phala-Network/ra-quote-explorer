@@ -1,54 +1,37 @@
-import {
-  Cpu,
-  Lock,
-  Calendar,
-  Shield,
-  ShieldOff,
-  Download,
-  AlertTriangle,
-} from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+"use client";
+
+import { useState } from "react";
+import { Shield, ShieldOff, AlertTriangle, Info, ArrowLeftRight, Copy, Check } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { DownloadButton } from "@/components/download_button";
-import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { type TDXQuote } from "@/types";
-import { TimeDisplay } from './time_display'
+import { AutomataVerification } from "./automata_verification";
+import { ZkVerifyVerification } from "./zkverify_verification";
 
 function hexToString(input: string): string {
- // Remove 0x prefix if exists
- const hex = input.startsWith('0x') ? input.slice(2) : input;
- 
- // Convert hex to string and trim null bytes
- return Buffer.from(hex, 'hex')
-   .toString()
-   .replace(/\x00+$/, '');
+  const hex = input.startsWith('0x') ? input.slice(2) : input;
+  return Buffer.from(hex, 'hex')
+    .toString()
+    .replace(/\x00+$/, '');
 }
 
 const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   return (
     <Alert
       variant={isVerified ? "default" : "destructive"}
-      className={cn("mb-6", isVerified ? "bg-green-50" : "bg-yellow-50")}
+      className={isVerified ? "bg-success/10 border-success" : ""}
     >
       <div className="flex items-center gap-3">
         {isVerified ? (
-          <Shield className="h-5 w-5 text-green-500" />
+          <Shield className="h-5 w-5 text-success" />
         ) : (
-          <ShieldOff className="h-5 w-5 text-red-500" />
+          <ShieldOff className="h-5 w-5 text-destructive" />
         )}
         <div>
           <AlertTitle className="text-base font-semibold">
@@ -67,17 +50,17 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
 
 const ProofOfCloudNote = () => {
   return (
-    <div className="mb-6 px-4 py-3 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
+    <div className="px-4 py-3 bg-warning/10 border-2 border-warning rounded-lg">
       <div className="flex items-start gap-2.5">
-        <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+        <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
         <div className="flex-1">
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm leading-relaxed">
             <span className="font-semibold">Proof of Cloud:</span> This device is not in our verified facilities registry.{" "}
             <a
               href="https://proofofcloud.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 underline font-medium"
+              className="text-primary hover:text-primary/80 underline font-medium"
             >
               Learn more
             </a>
@@ -88,108 +71,189 @@ const ProofOfCloudNote = () => {
   );
 };
 
+const MEASUREMENTS = [
+  {
+    field: 'User Data',
+    description: 'Application-specific data provided during attestation generation',
+    key: 'user_data',
+    source: 'header' as const
+  },
+  {
+    field: 'TEE TCB SVN',
+    description: 'Trusted Computing Base security version number',
+    key: 'tee_tcb_svn',
+    source: 'body' as const
+  },
+  {
+    field: 'MRSEAM',
+    description: 'Measurement of the SEAM (Secure Arbitration Mode) module',
+    key: 'mrseam',
+    source: 'body' as const
+  },
+  {
+    field: 'MRTD',
+    description: 'Measurement of the initial Trust Domain contents',
+    key: 'mrtd',
+    source: 'body' as const
+  },
+  {
+    field: 'MRCONFIG',
+    description: 'Measurement of the Trust Domain configuration',
+    key: 'mrconfig',
+    source: 'body' as const
+  },
+  {
+    field: 'MROWNER',
+    description: 'Measurement of the Trust Domain owner',
+    key: 'mrowner',
+    source: 'body' as const
+  },
+  {
+    field: 'MROWNERCONFIG',
+    description: 'Measurement of the owner-provided configuration',
+    key: 'mrownerconfig',
+    source: 'body' as const
+  },
+  {
+    field: 'RTMR0',
+    description: 'Runtime Measurement Register 0',
+    key: 'rtmr0',
+    source: 'body' as const
+  },
+  {
+    field: 'RTMR1',
+    description: 'Runtime Measurement Register 1',
+    key: 'rtmr1',
+    source: 'body' as const
+  },
+  {
+    field: 'RTMR2',
+    description: 'Runtime Measurement Register 2',
+    key: 'rtmr2',
+    source: 'body' as const
+  },
+  {
+    field: 'RTMR3',
+    description: 'Runtime Measurement Register 3',
+    key: 'rtmr3',
+    source: 'body' as const
+  },
+];
+
 export function ReportDetail({ report }: { report: TDXQuote }) {
   const showProofOfCloudNote = report.verified && report.proof_of_cloud === false;
+  const [showHex, setShowHex] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const reportDataDecoded = hexToString(report.body.reportdata);
+
+  const handleCopyReportData = async () => {
+    const textToCopy = showHex ? report.body.reportdata : reportDataDecoded;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
+  };
 
   return (
-    <>
-      <DcapVerificationStatus isVerified={report.verified} />
-      {showProofOfCloudNote && <ProofOfCloudNote />}
+    <div className="space-y-8">
+      {/* Verification Tabs */}
+      <section className="bg-card rounded-lg p-6 shadow-sm">
+        <Tabs defaultValue="dcap" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsTrigger value="dcap">DCAP Verification</TabsTrigger>
+            <TabsTrigger value="automata">Automata</TabsTrigger>
+            <TabsTrigger value="zkverify">zkVerify</TabsTrigger>
+          </TabsList>
 
-      <Card className="mb-8 relative">
-        <CardHeader>
-          <CardTitle>Report Overview</CardTitle>
-          <CardDescription>
-            This is a {report.header.tee_type == 'TEE_TDX' ? 'Intel TDX' : 'Intel SGX'} DCAP attestation.
-          </CardDescription>
-          <div className="md:absolute top-4 right-6 flex flex-col md:flex-row gap-0.5">
-            <DownloadButton
-              url={`/raw/${report.checksum}`}
-              name={`${report.checksum}_quote.bin`}
-              isAvailable={!!report.can_download}
-              className="w-40"
-            >
-              <Download className="h-4 w-4" />
-              Download Quote
-            </DownloadButton>
-            <DownloadButton
-              url={`/api/collateral/${report.checksum}`}
-              name={`${report.checksum}_quote_collateral.json`}
-              isAvailable={!!report.can_download}
-              className="w-56"
-            >
-              <Download className="h-4 w-4" />
-              Download Quote Collateral
-            </DownloadButton>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <Shield className="mr-2 h-5 w-5 text-blue-500" />
-              <span>Version: {report.header.version}</span>
-            </div>
-            <div className="flex items-center">
-              <Calendar className="mr-2 h-5 w-5 text-green-500" />
-              <span>AK Type: {report.header.ak_type}</span>
-            </div>
-            <div className="flex items-center">
-              <Cpu className="mr-2 h-5 w-5 text-purple-500" />
-              <span>TEE Type: {report.header.tee_type}</span>
-            </div>
-            <div className="flex items-center">
-              <Lock className="mr-2 h-5 w-5 text-red-500" />
-              <span>Uploaded At: <TimeDisplay isoString={report.uploaded_at} /></span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          <TabsContent value="dcap" className="space-y-4">
+            <DcapVerificationStatus isVerified={report.verified} />
+            {showProofOfCloudNote && <ProofOfCloudNote />}
+          </TabsContent>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Report Data Raw Input</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <pre className="text-xs p-2.5 border border-gray-200 rounded bg-gray-100">
-            {hexToString(report.body.reportdata)}
+          <TabsContent value="automata">
+            <AutomataVerification checksum={report.checksum} />
+          </TabsContent>
+
+          <TabsContent value="zkverify">
+            <ZkVerifyVerification checksum={report.checksum} />
+          </TabsContent>
+        </Tabs>
+      </section>
+
+      {/* Report Data Section */}
+      <section className="bg-card rounded-lg p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-medium uppercase tracking-wide text-muted-foreground">
+            Report Data
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHex(!showHex)}
+              className="text-xs"
+            >
+              {showHex ? 'Show Decoded' : 'Show Hex'}
+              <ArrowLeftRight className="h-3 w-3 ml-2" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleCopyReportData}
+              className="h-8 w-8 relative"
+            >
+              <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
+              <Check className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+            </Button>
+          </div>
+        </div>
+        <div className="border-b border-border mb-4" />
+        <div className="relative bg-muted/50 rounded-md p-4">
+          <pre className="font-mono text-sm leading-relaxed whitespace-pre-wrap break-all">
+            {showHex ? report.body.reportdata : reportDataDecoded}
           </pre>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Body Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Attribute</TableHead>
-                <TableHead>Value</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Object.entries(report.body).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell className="font-mono">{key}</TableCell>
-                  <TableCell className="font-mono break-all">{value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      {/* Measurements Section */}
+      <section className="bg-card rounded-lg p-6 shadow-sm overflow-hidden">
+        <h2 className="text-base font-medium uppercase tracking-wide text-muted-foreground mb-4">
+          Measurements
+        </h2>
+        <div className="border-b border-border mb-6" />
 
-      {report.cert_data ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Certificate Data</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="font-mono break-all max-w-full overflow-x-scroll">{report.cert_data}</pre>
-          </CardContent>
-        </Card>
-      ) : null}
-    </>
+        <div className="space-y-6">
+          {MEASUREMENTS.map(({ field, description, key, source }) => {
+            const value = source === 'header'
+              ? report.header[key as keyof typeof report.header]
+              : report.body[key as keyof typeof report.body];
+            return (
+              <div key={key} className="space-y-2 overflow-hidden">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{field}</span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="text-muted-foreground hover:text-foreground transition-colors">
+                        <Info className="h-3.5 w-3.5" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80" side="right">
+                      <p className="text-sm">{description}</p>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="font-mono text-xs text-muted-foreground leading-relaxed break-all tracking-wide">
+                  {value}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 }
