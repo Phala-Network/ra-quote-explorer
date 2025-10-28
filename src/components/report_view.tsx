@@ -36,7 +36,7 @@ export function ReportView({
 }: { report: TDXQuote; checksum: string }) {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto px-4 pb-6 max-w-4xl">
+      <div className="max-w-4xl mx-auto pb-6">
         {/* Header */}
         <SiteHeader showBackButton>
           {/* Downloads Dropdown */}

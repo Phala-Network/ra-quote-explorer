@@ -107,11 +107,6 @@ export const ZkVerifyVerification = ({ checksum }: ZkVerifyVerificationProps) =>
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Powered by</span>
-        <span className="text-lg font-semibold">zkVerify</span>
-      </div>
-
       <div className="space-y-4">
         <Button
           onClick={() => zkVerify(checksum)}

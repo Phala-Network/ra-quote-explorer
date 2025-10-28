@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { type TDXQuote } from "@/types";
 import { AutomataVerification } from "./automata_verification";
 import { ZkVerifyVerification } from "./zkverify_verification";
@@ -25,13 +26,17 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
   return (
     <Alert
       variant={isVerified ? "default" : "destructive"}
-      className={isVerified ? "bg-success/10 border-success" : ""}
+      className={isVerified ? "bg-primary-50 border-primary" : "border-destructive"}
     >
       <div className="flex items-center gap-3">
         {isVerified ? (
-          <Shield className="h-5 w-5 text-success" />
+          <div className="rounded-md bg-primary-200 border border-primary p-1.5">
+            <Shield className="h-5 w-5 text-primary-700" />
+          </div>
         ) : (
-          <ShieldOff className="h-5 w-5 text-destructive" />
+          <div className="rounded-md border border-destructive p-1.5">
+            <ShieldOff className="h-5 w-5 text-destructive" />
+          </div>
         )}
         <div>
           <AlertTitle className="text-base font-semibold">
@@ -50,7 +55,7 @@ const DcapVerificationStatus = ({ isVerified }: { isVerified: boolean }) => {
 
 const ProofOfCloudNote = () => {
   return (
-    <div className="px-4 py-3 bg-warning/10 border-2 border-warning rounded-lg">
+    <div className="px-4 py-3 border border-warning rounded-lg">
       <div className="flex items-start gap-2.5">
         <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
         <div className="flex-1">
@@ -60,7 +65,7 @@ const ProofOfCloudNote = () => {
               href="https://proofofcloud.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 underline font-medium"
+              className="underline font-medium ml-2"
             >
               Learn more
             </a>
@@ -161,99 +166,108 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
   return (
     <div className="space-y-8">
       {/* Verification Tabs */}
-      <section className="bg-card rounded-lg p-6 shadow-sm">
-        <Tabs defaultValue="dcap" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="dcap">DCAP Verification</TabsTrigger>
-            <TabsTrigger value="automata">Automata</TabsTrigger>
-            <TabsTrigger value="zkverify">zkVerify</TabsTrigger>
-          </TabsList>
+      <Card>
+        <CardContent className="pt-6">
+          <Tabs defaultValue="phala" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-11">
+              <TabsTrigger value="phala" className="h-9">
+                <img src="/phala-logo.svg" alt="Phala" className="h-7" />
+              </TabsTrigger>
+              <TabsTrigger value="automata" className="h-9">
+                <img src="/automata-logo.png" alt="Automata" className="h-8" />
+              </TabsTrigger>
+              <TabsTrigger value="zkverify" className="h-9">
+                  <img src="/zkverify-logo.svg" alt="zkVerify" className="h-4" />
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="dcap" className="space-y-4">
-            <DcapVerificationStatus isVerified={report.verified} />
-            {showProofOfCloudNote && <ProofOfCloudNote />}
-          </TabsContent>
+            <TabsContent value="phala" className="space-y-4">
+              <DcapVerificationStatus isVerified={report.verified} />
+              {showProofOfCloudNote && <ProofOfCloudNote />}
+            </TabsContent>
 
-          <TabsContent value="automata">
-            <AutomataVerification checksum={report.checksum} />
-          </TabsContent>
+            <TabsContent value="automata">
+              <AutomataVerification checksum={report.checksum} />
+            </TabsContent>
 
-          <TabsContent value="zkverify">
-            <ZkVerifyVerification checksum={report.checksum} />
-          </TabsContent>
-        </Tabs>
-      </section>
+            <TabsContent value="zkverify">
+              <ZkVerifyVerification checksum={report.checksum} />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
       {/* Report Data Section */}
-      <section className="bg-card rounded-lg p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-medium uppercase tracking-wide text-muted-foreground">
-            Report Data
-          </h2>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHex(!showHex)}
-              className="text-xs"
-            >
-              {showHex ? 'Show Decoded' : 'Show Hex'}
-              <ArrowLeftRight className="h-3 w-3 ml-2" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleCopyReportData}
-              className="h-8 w-8 relative"
-            >
-              <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
-              <Check className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
-            </Button>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Report Data</CardTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHex(!showHex)}
+                className="text-xs"
+              >
+                {showHex ? 'Show Decoded' : 'Show Hex'}
+                <ArrowLeftRight className="h-3 w-3 ml-2" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleCopyReportData}
+                className="h-8 w-8 relative"
+              >
+                <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
+                <Check className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+              </Button>
+            </div>
           </div>
-        </div>
-        <div className="border-b border-border mb-4" />
-        <div className="relative bg-muted/50 rounded-md p-4">
-          <pre className="font-mono text-sm leading-relaxed whitespace-pre-wrap break-all">
-            {showHex ? report.body.reportdata : reportDataDecoded}
-          </pre>
-        </div>
-      </section>
+        </CardHeader>
+        <CardContent>
+          <div className="relative bg-muted/50 rounded-md p-4">
+            <pre className="font-mono text-sm leading-relaxed whitespace-pre-wrap break-all">
+              {showHex ? report.body.reportdata : reportDataDecoded}
+            </pre>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Measurements Section */}
-      <section className="bg-card rounded-lg p-6 shadow-sm overflow-hidden">
-        <h2 className="text-base font-medium uppercase tracking-wide text-muted-foreground mb-4">
-          Measurements
-        </h2>
-        <div className="border-b border-border mb-6" />
-
-        <div className="space-y-6">
-          {MEASUREMENTS.map(({ field, description, key, source }) => {
-            const value = source === 'header'
-              ? report.header[key as keyof typeof report.header]
-              : report.body[key as keyof typeof report.body];
-            return (
-              <div key={key} className="space-y-2 overflow-hidden">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{field}</span>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <button className="text-muted-foreground hover:text-foreground transition-colors">
-                        <Info className="h-3.5 w-3.5" />
-                      </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80" side="right">
-                      <p className="text-sm">{description}</p>
-                    </PopoverContent>
-                  </Popover>
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle>Measurements</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {MEASUREMENTS.map(({ field, description, key, source }) => {
+              const value = source === 'header'
+                ? report.header[key as keyof typeof report.header]
+                : report.body[key as keyof typeof report.body];
+              return (
+                <div key={key} className="space-y-2 overflow-hidden">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{field}</span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Info className="h-3.5 w-3.5" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80" side="right">
+                        <p className="text-sm">{description}</p>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="font-mono text-xs text-muted-foreground leading-relaxed break-all tracking-wide">
+                    {value}
+                  </div>
                 </div>
-                <div className="font-mono text-xs text-muted-foreground leading-relaxed break-all tracking-wide">
-                  {value}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

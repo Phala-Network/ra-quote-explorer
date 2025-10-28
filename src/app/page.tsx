@@ -9,9 +9,9 @@ export default function Home() {
     }).then((res) => res.json()),
   );
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <UploadView />
-      <div className="mt-12">
+      <div className="mt-12 max-w-4xl mx-auto">
         <RecentAttestations items={items} />
       </div>
       <footer className="mt-8 pb-4">

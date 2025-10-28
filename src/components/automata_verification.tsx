@@ -159,15 +159,6 @@ export const AutomataVerification = ({ checksum }: AutomataVerificationProps) =>
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Powered by</span>
-        <img
-          src="https://raw.githubusercontent.com/automata-network/automata-brand-kit/main/PNG/ATA_Black%20Text%20with%20Color%20Logo.png"
-          className="h-8"
-          alt="Automata"
-        />
-      </div>
-
       <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Network</label>
@@ -208,7 +199,7 @@ export const AutomataVerification = ({ checksum }: AutomataVerificationProps) =>
               href={`${selectedNetwork.network.blockExplorers?.default.url}/address/${selectedNetwork.contractAddress}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80"
+              className="text-primary-500 hover:text-base-600"
             >
               <ExternalLink className="h-4 w-4" />
             </a>
