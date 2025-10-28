@@ -6,20 +6,14 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { QuoteUpload } from "@/components/quote_upload";
+import { SiteHeader } from "@/components/site_header";
 
 export function UploadView() {
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center">
-        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-          TEE Attestation Explorer
-        </h1>
-        <p className="mt-5 text-xl text-gray-500">
-          Verify and analyze Intel SGX and TD attestation reports with ❤️ by <a href="https://phala.network" target="_blank">Phala</a>
-        </p>
-      </div>
+      <SiteHeader />
 
-      <Card className="mt-10">
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Submit Attestation Report</CardTitle>
           <CardDescription>

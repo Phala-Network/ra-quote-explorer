@@ -1,5 +1,6 @@
 import { ofetch } from "ofetch";
 import { ReportView } from "@/components/report_view";
+import { ReportNotFound } from "@/components/report_not_found";
 
 export default async function ReportDisplayPage({
   params,
@@ -9,10 +10,10 @@ export default async function ReportDisplayPage({
       `${process.env.API_PREFIX}/attestations/view/${params.checksum}`,
     );
     if (!data) {
-      return <div>Report not found</div>;
+      return <ReportNotFound />;
     }
     return <ReportView report={data} checksum={params.checksum} />;
   } catch (_) {
-    return <div>Report not found</div>;
+    return <ReportNotFound />;
   }
 }

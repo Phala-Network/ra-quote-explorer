@@ -1,21 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { AlertCircle, Upload } from "lucide-react";
+import { useState, useRef } from "react";
+import { AlertCircle, Upload, Loader2, ShieldCheck } from "lucide-react";
 import { ofetch } from "ofetch";
 import { useRouter } from "next/navigation";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
 function hexToUint8Array(hex: string) {
@@ -68,113 +59,154 @@ async function uploadFile(file: File) {
 export function QuoteUpload() {
   const [hex, setHex] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  return (
-    <form>
-      <Tabs defaultValue="hex" className="">
-        <TabsList>
-          <TabsTrigger value="hex" onClick={() => setHasError(false)}>
-            Hex Quote
-          </TabsTrigger>
-          <TabsTrigger value="file" onClick={() => setHasError(false)}>
-            Upload the Quote File
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="hex">
-          <Card>
-            <CardHeader>
-              <CardTitle>Hex Quote</CardTitle>
-              <CardDescription>
-                You can paste the hex text of the attestation quote here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {hasError ? (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>The quote is invalid.</AlertDescription>
-                </Alert>
-              ) : null}
 
-              <div className="space-y-1">
-                <Textarea
-                  rows={10}
-                  className="font-mono"
-                  onChange={(e) => setHex(e.target.value)}
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                onClick={async (evt) => {
-                  evt.preventDefault();
-                  try {
-                    const data = hexToUint8Array(hex);
-                    const { success, checksum } = await uploadUint8Array(data);
-                    if (success) {
-                      router.push(`/reports/${checksum}`);
-                    } else {
-                      setHasError(true);
-                    }
-                  } catch (error) {
-                    console.error(error);
-                  }
-                }}
-              >
-                Verify
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        <TabsContent value="file">
-          <Card>
-            <CardHeader>
-              <CardTitle>Upload the Quote File</CardTitle>
-              <CardDescription>
-                You can upload the attestation quote file here.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {hasError ? (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>The quote is invalid.</AlertDescription>
-                </Alert>
-              ) : null}
-              <div className="space-y-1">
-                <input
-                  type="file"
-                  id="attestation-file"
-                  className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      try {
-                        const { success, checksum } = await uploadFile(file);
-                        if (success) {
-                          router.push(`/reports/${checksum}`);
-                        } else {
-                          setHasError(true);
-                        }
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }
-                  }}
-                />
-                <Button asChild>
-                  <label htmlFor="attestation-file">
-                    <Upload className="mr-2 h-5 w-5" />
-                    Upload Attestation Quote
-                  </label>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+  const handleFileUpload = async (file: File) => {
+    setIsLoading(true);
+    try {
+      const { success, checksum } = await uploadFile(file);
+      if (success) {
+        router.push(`/reports/${checksum}`);
+      } else {
+        setHasError(true);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setHasError(true);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    setHasError(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      await handleFileUpload(file);
+    }
+  };
+
+  return (
+    <form className="space-y-4">
+      {hasError && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>The quote is invalid.</AlertDescription>
+        </Alert>
+      )}
+
+      <div className="space-y-3">
+        <label className="text-sm font-medium">Paste hex quote or drop file</label>
+        <div
+          className="relative"
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <Textarea
+            rows={10}
+            className={`font-mono text-xs relative z-10 ${
+              isDragging ? "border-primary-300 border-2 bg-primary-50/50" : ""
+            }`}
+            placeholder="0x03000200000000000a00..."
+            value={hex}
+            disabled={isLoading}
+            onChange={(e) => {
+              setHex(e.target.value);
+              setHasError(false);
+            }}
+          />
+          {!hex && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+              <p className="text-gray-300 text-sm">
+                Drag and drop your file here
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Button
+          className="font-bold"
+          disabled={isLoading}
+          onClick={async (evt) => {
+            evt.preventDefault();
+            setHasError(false);
+            setIsLoading(true);
+            try {
+              const data = hexToUint8Array(hex);
+              const { success, checksum } = await uploadUint8Array(data);
+              if (success) {
+                router.push(`/reports/${checksum}`);
+              } else {
+                setHasError(true);
+                setIsLoading(false);
+              }
+            } catch (error) {
+              console.error(error);
+              setHasError(true);
+              setIsLoading(false);
+            }
+          }}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Verifying...
+            </>
+          ) : (
+            <>
+              <ShieldCheck className="h-4 w-4" />
+              Verify
+            </>
+          )}
+        </Button>
+
+        <span className="text-sm text-muted-foreground">or</span>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          disabled={isLoading}
+          onChange={async (e) => {
+            setHasError(false);
+            const file = e.target.files?.[0];
+            if (file) {
+              await handleFileUpload(file);
+            }
+          }}
+        />
+        <Button
+          variant="outline"
+          disabled={isLoading}
+          onClick={(e) => {
+            e.preventDefault();
+            fileInputRef.current?.click();
+          }}
+        >
+          <Upload className="mr-2 h-4 w-4" />
+          Upload File
+        </Button>
+      </div>
     </form>
   );
 }
