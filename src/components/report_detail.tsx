@@ -78,8 +78,8 @@ const ProofOfCloudNote = () => {
 
 const MEASUREMENTS = [
   {
-    field: 'PPID',
-    description: 'Provisioning Platform ID',
+    field: 'USER DATA',
+    description: 'Application-specific data provided during attestation generation',
     key: 'user_data',
     source: 'header' as const
   },
@@ -240,6 +240,24 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
+            <div className="space-y-2 overflow-hidden">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">PPID</span>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="text-muted-foreground hover:text-foreground transition-colors">
+                      <Info className="h-3.5 w-3.5" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80" side="right">
+                    <p className="text-sm">Provisioning Platform ID</p>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="font-mono text-xs text-muted-foreground leading-relaxed break-all tracking-wide">
+                {report.ppid}
+              </div>
+            </div>
             {MEASUREMENTS.map(({ field, description, key, source }) => {
               const value = source === 'header'
                 ? report.header[key as keyof typeof report.header]

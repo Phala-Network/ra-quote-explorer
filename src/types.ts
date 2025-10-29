@@ -29,4 +29,5 @@ export interface TDXQuote {
   checksum: string;
   can_download: boolean;
   uploaded_at: string;
+  ppid: string;
 }
