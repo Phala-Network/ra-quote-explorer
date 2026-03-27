@@ -44,7 +44,7 @@ export function RecentAttestations({
                       <ShieldOff className="h-3.5 w-3.5 text-destructive" />
                     </div>
                   )}
-                  <Link href={`/reports/${item.checksum}`} className="ml-1.5 hover:text-primary-800 hover:underline transition-colors">
+                  <Link href={`/reports/${item.checksum}`} className="ml-1.5 hover:text-primary-800 hover:underline transition-colors truncate max-w-[160px] sm:max-w-none">
                     {item.checksum}
                   </Link>
                 </TableCell>
