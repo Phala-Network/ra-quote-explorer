@@ -30,4 +30,9 @@ export interface TDXQuote {
   can_download: boolean;
   uploaded_at: string;
   ppid: string;
+  node_provider?: {
+    proof_of_cloud: boolean;
+    provider: string;
+    ppid: string;
+  };
 }
