@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, ShieldOff, AlertTriangle, Info, ArrowLeftRight, Copy, Check } from "lucide-react";
+import { Shield, ShieldOff, AlertTriangle, Info, ArrowLeftRight, Copy, Check, X } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -167,6 +167,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
   const showProofOfCloudNote = report.verified && report.proof_of_cloud === false;
   const [showHex, setShowHex] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
 
   const reportDataDecoded = hexToString(report.body.reportdata);
 
@@ -178,6 +179,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy:', error);
+      setCopyFailed(true);
+      setTimeout(() => setCopyFailed(false), 2000);
     }
   };
 
@@ -237,10 +240,12 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                 variant="ghost"
                 size="icon"
                 onClick={handleCopyReportData}
-                className="h-8 w-8 relative"
+                aria-label="Copy to clipboard"
+                className={`h-8 w-8 relative ${copyFailed ? 'text-destructive' : ''}`}
               >
-                <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
+                <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied || copyFailed ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
                 <Check className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+                <X className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copyFailed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
               </Button>
             </div>
           </div>
