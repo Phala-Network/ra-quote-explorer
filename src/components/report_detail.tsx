@@ -187,15 +187,18 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
       <Card>
         <CardContent className="pt-6">
           <Tabs defaultValue="phala" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6 h-11">
-              <TabsTrigger value="phala" className="h-9">
-                <img src="/phala-logo.svg" alt="Phala" className="h-7" />
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-14">
+              <TabsTrigger value="phala" className="h-12 flex flex-col gap-0.5">
+                <img src="/phala-logo.svg" alt="" className="h-5" aria-hidden="true" />
+                <span className="text-[10px] leading-none">Phala</span>
               </TabsTrigger>
-              <TabsTrigger value="automata" className="h-9">
-                <img src="/automata-logo.png" alt="Automata" className="h-8" />
+              <TabsTrigger value="automata" className="h-12 flex flex-col gap-0.5">
+                <img src="/automata-logo.png" alt="" className="h-5" aria-hidden="true" />
+                <span className="text-[10px] leading-none">Automata</span>
               </TabsTrigger>
-              <TabsTrigger value="zkverify" className="h-9">
-                  <img src="/zkverify-logo.svg" alt="zkVerify" className="h-4" />
+              <TabsTrigger value="zkverify" className="h-12 flex flex-col gap-0.5">
+                <img src="/zkverify-logo.svg" alt="" className="h-4" aria-hidden="true" />
+                <span className="text-[10px] leading-none">zkVerify</span>
               </TabsTrigger>
             </TabsList>
 
