@@ -271,8 +271,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                 <span className="text-sm font-medium">PPID</span>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="text-muted-foreground hover:text-foreground transition-colors">
-                      <Info className="h-3.5 w-3.5" />
+                    <button aria-label="Learn more about PPID" className="text-muted-foreground hover:text-foreground transition-colors">
+                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80" side="right">
@@ -294,8 +294,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                     <span className="text-sm font-medium">{field}</span>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <button className="text-muted-foreground hover:text-foreground transition-colors">
-                          <Info className="h-3.5 w-3.5" />
+                        <button aria-label={`Learn more about ${field}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Info className="h-3.5 w-3.5" aria-hidden="true" />
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-80" side="right">
