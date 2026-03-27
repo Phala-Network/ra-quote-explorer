@@ -115,7 +115,7 @@ export function QuoteUpload() {
       )}
 
       <div className="space-y-3">
-        <label className="text-sm font-medium">Paste hex quote or drop file</label>
+        <label htmlFor="hex-input" className="text-sm font-medium">Paste hex quote or drop file</label>
         <div
           className="relative"
           onDragOver={handleDragOver}
@@ -123,6 +123,7 @@ export function QuoteUpload() {
           onDrop={handleDrop}
         >
           <Textarea
+            id="hex-input"
             rows={10}
             className={`font-mono text-xs relative z-10 ${
               isDragging ? "border-primary-300 border-2 bg-primary-50/50" : ""
