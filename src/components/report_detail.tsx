@@ -60,7 +60,7 @@ const DcapVerificationStatus = ({ isVerified, provider }: { isVerified: boolean;
             href={providerMeta.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border bg-white hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+            className="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background hover:bg-accent transition-colors text-sm font-medium text-foreground"
           >
             <img src={providerMeta.logo} alt={providerMeta.name} className="h-5 w-5 rounded-full" />
             {providerMeta.name}
