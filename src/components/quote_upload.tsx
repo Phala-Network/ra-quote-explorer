@@ -124,7 +124,7 @@ export function QuoteUpload() {
             rows={10}
             className={`font-mono text-xs relative z-10 ${
               isDragging ? "border-primary-300 border-2 bg-primary-50/50" : ""
-            }`}
+            } ${hasError ? "border-destructive focus-visible:ring-destructive" : ""}`}
             placeholder="0x03000200000000000a00..."
             value={hex}
             disabled={isLoading}
