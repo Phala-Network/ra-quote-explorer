@@ -1,6 +1,7 @@
 "use client";
 
-import { Download, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { Download, ChevronDown, UploadCloud, Terminal, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -66,6 +67,40 @@ export function ReportView({
 
         {/* Report Content */}
         <ReportDetail report={report} />
+
+        {/* Internal navigation */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link
+            href="/"
+            className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 hover:bg-accent transition-colors"
+          >
+            <UploadCloud className="h-4 w-4 text-muted-foreground shrink-0" />
+            <div>
+              <p className="text-sm font-medium">Verify another quote</p>
+              <p className="text-xs text-muted-foreground">Submit a new attestation report</p>
+            </div>
+          </Link>
+          <Link
+            href="/docs"
+            className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 hover:bg-accent transition-colors"
+          >
+            <Terminal className="h-4 w-4 text-muted-foreground shrink-0" />
+            <div>
+              <p className="text-sm font-medium">API documentation</p>
+              <p className="text-xs text-muted-foreground">Automate verification via REST API</p>
+            </div>
+          </Link>
+          <Link
+            href="/#faq"
+            className="flex items-center gap-3 rounded-lg border bg-background px-4 py-3 hover:bg-accent transition-colors"
+          >
+            <HelpCircle className="h-4 w-4 text-muted-foreground shrink-0" />
+            <div>
+              <p className="text-sm font-medium">What do these fields mean?</p>
+              <p className="text-xs text-muted-foreground">MRTD, RTMR, TCB SVN explained</p>
+            </div>
+          </Link>
+        </div>
 
         {/* Footer */}
         <footer className="mt-8">

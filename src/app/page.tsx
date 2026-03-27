@@ -1,6 +1,7 @@
 import { use } from "react";
 import { UploadView } from "@/components/upload_view";
 import { RecentAttestations } from "@/components/recent_attestations";
+import { FaqSection } from "@/components/faq_section";
 
 export default function Home() {
   const items = use(
@@ -14,6 +15,7 @@ export default function Home() {
       <div className="mt-12 max-w-4xl mx-auto">
         <RecentAttestations items={items} />
       </div>
+      <FaqSection />
       <footer className="mt-8 pb-4">
         <div className="inline-flex gap-1.5 justify-center items-center w-full">
           <img src="/apple-touch-icon.png" className="w-5 h-5 rounded-full overflow-hidden" alt="Phala" />

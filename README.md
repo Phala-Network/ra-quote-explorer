@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TEE Attestation Explorer
 
-## Getting Started
+Online tool for verifying and analyzing Intel SGX and TDX attestation quotes (DCAP/ECDSA format).
 
-First, run the development server:
+**Live at: https://proof.t16z.com** · [GitHub](https://github.com/Phala-Network/ra-quote-explorer)
+
+Over one million attestation quotes have been processed since launch.
+
+## What it does
+
+Submit an attestation quote (binary file or hex-encoded string) to:
+
+- **Parse all fields** — MRTD, MRCONFIG, RTMR0–3, TEE TCB SVN, MRSEAM, USER DATA, PPID, and more
+- **Check TCB status** — validates the platform's firmware patch level against Intel's Provisioning Certification Service
+- **Verify via multiple channels:**
+  - Phala DCAP — direct verification against Intel PCS
+  - Automata on-chain — DCAP smart contracts on Ethereum (Sepolia, Holesky) or Automata networks
+  - zkVerify — zero-knowledge proof of verification via Risc Zero
+- **Proof of Cloud** — checks whether the attesting hardware is registered in the multi-organization verified hardware registry
+- **Download artifacts** — export the raw quote binary and collateral JSON
+
+## Supported formats
+
+- Intel TDX quotes (DCAP/ECDSA)
+- Intel SGX ECDSA (DCAP) quotes
+
+EPID-based SGX quotes are not supported.
+
+## API
+
+Automate attestation verification with the public REST API — no API key required.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Submit a binary quote file
+curl -X POST -F "file=@quote.bin" https://proof.t16z.com/api/upload
+
+# Submit a hex-encoded quote
+curl -X POST -F "hex=03000200..." https://proof.t16z.com/api/upload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Response:
+```json
+{
+  "success": true,
+  "checksum": "0x...",
+  "url": "https://proof.t16z.com/reports/0x..."
+}
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Rate limits: 10 requests/minute per IP. See [API documentation](https://proof.t16z.com/docs) for full details and code examples in Python, Node.js, and JavaScript.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Development
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Tech stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS + Radix UI
+- Viem (on-chain verification)
+- ioredis (rate limiting)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Related projects
 
-## Deploy on Vercel
+- [dstack](https://github.com/Dstack-TEE/dstack) — open framework for deploying confidential AI workloads on TEE hardware
+- [Phala Cloud](https://cloud.phala.network) — managed confidential computing platform
+- [Automata DCAP Attestation](https://github.com/automata-network/automata-dcap-attestation) — on-chain DCAP verification contracts
+- [zkVerify](https://zkverify.io) — ZK proof verification network
+- [Proof of Cloud](https://proofofcloud.org) — verified cloud hardware registry
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Issues and pull requests are welcome. The repository is maintained by the [Phala Network](https://phala.network) team.
+
+## License
+
+[Apache 2.0](LICENSE)

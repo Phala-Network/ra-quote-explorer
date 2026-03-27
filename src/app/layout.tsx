@@ -13,20 +13,30 @@ export const metadata: Metadata = {
     template: "%s | TEE Attestation Explorer by Phala",
   },
   description:
-    "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments with TEE Attestation Explorer.",
+    "Free online tool to verify and analyze Intel SGX and TDX attestation quotes (DCAP format). Parse MRTD, MRCONFIG, RTMR measurements. Multi-party verification via Phala, Automata, and zkVerify.",
   keywords: [
-    "TEE",
+    "TEE attestation",
+    "SGX attestation",
+    "TDX attestation",
+    "DCAP quote verification",
+    "Intel SGX remote attestation",
+    "verify SGX quote",
+    "TEE attestation explorer",
+    "confidential computing",
+    "MRTD",
+    "MRCONFIG",
+    "RTMR",
     "Trusted Execution Environment",
-    "Attestation",
-    "Security",
-    "Analysis",
     "dstack",
-    "TEE Attestation Explorer",
     "RA Quote Explorer",
   ],
   authors: [{ name: "PhalaNetwork" }],
   creator: "PhalaNetwork",
   publisher: "PhalaNetwork",
+  metadataBase: new URL("https://proof.t16z.com"),
+  alternates: {
+    canonical: "/",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -35,26 +45,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: 'https://proof.t16z.com',
+    url: "https://proof.t16z.com",
     siteName: "TEE Attestation Explorer by Phala",
-    title: "TEE Attestation Explorer",
-    description:
-      "Secure and comprehensive analysis tool for TEE attestation reports. Verify and gain insights into your trusted computing environments.",
-    // images: [
-    //   {
-    //     url: 'https://www.example.com/og-image.jpg',
-    //     width: 1200,
-    //     height: 630,
-    //     alt: 'dstack Confidant logo',
-    //   },
-    // ],
-  },
-  twitter: {
-    card: "summary_large_image",
     title: "TEE Attestation Explorer by Phala",
     description:
-      "Secure and comprehensive analysis for TEE attestation reports.",
-    // images: ['https://www.example.com/twitter-image.jpg'],
+      "Free online tool to verify Intel SGX and TDX attestation quotes. Parse measurements, check TCB status, and verify on-chain via Automata or zkVerify.",
+  },
+  twitter: {
+    card: "summary",
+    title: "TEE Attestation Explorer by Phala",
+    description:
+      "Free online tool to verify Intel SGX and TDX attestation quotes. Parse measurements, check TCB status, and verify on-chain.",
     creator: "@PhalaNetwork",
   },
   icons: {
@@ -65,6 +66,27 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "TEE Attestation Explorer",
+  url: "https://proof.t16z.com",
+  description:
+    "Free online tool to verify and analyze Intel SGX and TDX attestation quotes (DCAP format). Parse MRTD, MRCONFIG, RTMR measurements. Multi-party verification via Phala, Automata, and zkVerify.",
+  applicationCategory: "SecurityApplication",
+  operatingSystem: "Any",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  author: {
+    "@type": "Organization",
+    name: "Phala Network",
+    url: "https://phala.network",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,6 +94,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static JSON-LD, no user input
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`antialiased`}>
         {children}
       </body>
