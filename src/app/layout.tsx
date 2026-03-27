@@ -9,11 +9,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "TEE Attestation Explorer by Phala",
-    template: "%s | TEE Attestation Explorer by Phala",
+    default: "Verify & Parse Intel SGX / TDX Attestation Quotes Online | TEE Attestation Explorer",
+    template: "%s | TEE Attestation Explorer",
   },
   description:
-    "Free online tool to verify and analyze Intel SGX and TDX attestation quotes (DCAP format). Parse MRTD, MRCONFIG, RTMR measurements. Multi-party verification via Phala, Automata, and zkVerify.",
+    "Free online tool to instantly verify and parse Intel SGX and TDX DCAP attestation quotes. Check TCB status, inspect MRTD, MRCONFIG, RTMR measurements, and verify on-chain via Automata or zkVerify.",
   keywords: [
     "TEE attestation",
     "SGX attestation",

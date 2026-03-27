@@ -7,6 +7,26 @@ import {
 
 const FAQ_ITEMS = [
   {
+    id: "how-to-verify",
+    question: "How do I verify an Intel SGX or TDX attestation quote?",
+    answer: (
+      <>
+        Paste your hex-encoded quote into the text field on the{" "}
+        <a href="/" className="underline hover:text-foreground transition-colors">
+          home page
+        </a>
+        , or drag and drop the raw binary file. Click <strong>Verify</strong> — the tool will parse
+        all fields and run DCAP verification instantly. The report page shows the full measurement
+        breakdown, TCB status, and lets you run additional on-chain verification via Automata or
+        zkVerify. For automated verification, use the{" "}
+        <a href="/docs" className="underline hover:text-foreground transition-colors">
+          REST API
+        </a>
+        .
+      </>
+    ),
+  },
+  {
     id: "what-is-tee-attestation",
     question: "What is TEE Remote Attestation?",
     answer: (
