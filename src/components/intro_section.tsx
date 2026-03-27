@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 export function IntroSection() {
   return (
     <div className="mb-6 space-y-4">
@@ -7,6 +11,21 @@ export function IntroSection() {
         fields — MRTD, MRCONFIG, RTMR0–3, TEE TCB SVN, MRSEAM — and verify it through multiple
         independent channels. Over one million attestation quotes have been processed to date.
       </p>
+
+      <div className="flex flex-wrap gap-2">
+        <Button asChild variant="outline" size="sm">
+          <Link href="/docs">
+            API Docs
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/docs/dcap-qvl">
+            dcap-qvl Library Docs
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="rounded-lg border bg-background px-4 py-3">

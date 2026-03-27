@@ -73,6 +73,32 @@ export default function DocsPage() {
         </div>
 
         <div className="bg-background rounded-lg border p-6 sm:p-8 space-y-10">
+          <section>
+            <h2 className="text-xl font-semibold mb-3">Documentation Index</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-lg border p-4 bg-muted/40">
+                <p className="font-semibold mb-1">API Documentation</p>
+                <p className="text-sm text-muted-foreground mb-3">
+                  HTTP endpoints for uploading quotes, redirects, limits, and response formats.
+                </p>
+                <Link href="/docs" className="text-sm underline hover:text-foreground transition-colors">
+                  You are here
+                </Link>
+              </div>
+              <div className="rounded-lg border p-4 bg-muted/40">
+                <p className="font-semibold mb-1">dcap-qvl Library Docs</p>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Learn how to use the open-source dcap-qvl libraries in Rust, JavaScript, Python,
+                  and Go.
+                </p>
+                <Link href="/docs/dcap-qvl" className="text-sm underline hover:text-foreground transition-colors">
+                  Open dcap-qvl docs
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          <hr />
 
           {/* Rate Limits */}
           <section>
