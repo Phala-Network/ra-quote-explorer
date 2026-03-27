@@ -33,7 +33,9 @@ function hexToUint8Array(hex: string) {
 }
 
 async function uploadUint8Array(data: Uint8Array) {
-  const blob = new Blob([data], { type: "application/octet-stream" });
+  const normalized = new Uint8Array(data.byteLength);
+  normalized.set(data);
+  const blob = new Blob([normalized.buffer], { type: "application/octet-stream" });
   const file = new File([blob], "quote.bin", {
     type: "application/octet-stream",
   });

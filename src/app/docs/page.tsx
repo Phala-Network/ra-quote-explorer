@@ -41,10 +41,8 @@ function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: static table
             <tr key={i} className="border-b last:border-0">
               {row.map((cell, j) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: static table
                 <td key={j} className="py-2 pr-4 font-mono text-xs align-top">
                   {cell}
                 </td>

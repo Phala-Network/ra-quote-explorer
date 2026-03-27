@@ -78,14 +78,16 @@ async function handleRequest(
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { checksum: string } },
+  { params }: { params: Promise<{ checksum: string }> },
 ) {
-  return handleRequest(params.checksum, "GET");
+  const { checksum } = await params;
+  return handleRequest(checksum, "GET");
 }
 
 export async function HEAD(
   _req: NextRequest,
-  { params }: { params: { checksum: string } },
+  { params }: { params: Promise<{ checksum: string }> },
 ) {
-  return handleRequest(params.checksum, "HEAD");
+  const { checksum } = await params;
+  return handleRequest(checksum, "HEAD");
 }

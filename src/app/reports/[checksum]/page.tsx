@@ -5,28 +5,30 @@ import { ReportNotFound } from "@/components/report_not_found";
 
 export async function generateMetadata({
   params,
-}: { params: { checksum: string } }): Promise<Metadata> {
-  const short = params.checksum.slice(0, 16);
+}: { params: Promise<{ checksum: string }> }): Promise<Metadata> {
+  const { checksum } = await params;
+  const short = checksum.slice(0, 16);
   return {
     title: `Attestation Report ${short}…`,
-    description: `TEE attestation report ${params.checksum}. View measurements, TCB status, and multi-party verification results.`,
+    description: `TEE attestation report ${checksum}. View measurements, TCB status, and multi-party verification results.`,
     alternates: {
-      canonical: `/reports/${params.checksum}`,
+      canonical: `/reports/${checksum}`,
     },
   };
 }
 
 export default async function ReportDisplayPage({
   params,
-}: { params: { checksum: string } }) {
+}: { params: Promise<{ checksum: string }> }) {
+  const { checksum } = await params;
   try {
     const data = await ofetch(
-      `${process.env.API_PREFIX}/attestations/view/${params.checksum}`,
+      `${process.env.API_PREFIX}/attestations/view/${checksum}`,
     );
     if (!data) {
       return <ReportNotFound />;
     }
-    return <ReportView report={data} checksum={params.checksum} />;
+    return <ReportView report={data} checksum={checksum} />;
   } catch (_) {
     return <ReportNotFound />;
   }
