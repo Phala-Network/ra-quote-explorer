@@ -58,7 +58,7 @@ export function TimeDisplay({ isoString, className = '' }: TimeDisplayProps) {
       });
 
       return { friendly, detailed };
-    } catch (error) {
+    } catch (_error) {
       return {
         friendly: 'Invalid date',
         detailed: 'Invalid date'

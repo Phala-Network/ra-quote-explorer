@@ -138,7 +138,7 @@ export const useZkVerify = () => {
     };
   }, []);
 
-  const zkVerify = useCallback(async (checksum: any) => {
+  const zkVerify = useCallback(async (checksum: string) => {
     if (!checksum) {
       setError("Checksum is missing.");
       return;
@@ -198,11 +198,16 @@ export const useZkVerify = () => {
         }
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
-    } catch (err: any) {
-      if (err.name !== 'AbortError') {
-        setError(err.message || "An unknown error occurred during zkVerify.");
-        setZkVerifyStatus("Verification Failed");
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
       }
+
+      const message = err instanceof Error
+        ? err.message
+        : "An unknown error occurred during zkVerify.";
+      setError(message);
+      setZkVerifyStatus("Verification Failed");
     } finally {
       setIsLoading(false);
     }
@@ -219,12 +224,10 @@ export const DcapVerifyForm = ({ checksum }: DcapVerifyFormProps) => {
     useState<VerificationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { 
-    zkVerify, 
-    zkVerifyStatus, 
-    zkVerifyTxHash, 
-    isLoading: isZkLoading, 
-    error: zkError 
+  const {
+    zkVerify,
+    zkVerifyStatus,
+    zkVerifyTxHash,
   } = useZkVerify();
 
   const onChainDcapVerify = async (
