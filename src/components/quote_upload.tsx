@@ -137,7 +137,7 @@ export function QuoteUpload() {
           />
           {!hex && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-              <p className="text-gray-300 text-sm">
+              <p className="text-muted-foreground/40 text-sm">
                 Drag and drop your file here
               </p>
             </div>
