@@ -15,7 +15,7 @@ export interface TDXQuote {
     tdattributes: string;
     xfam: string;
     mrtd: string;
-    mrconfig: string;
+    mr_config_id: string;
     mrowner: string;
     mrownerconfig: string;
     rtmr0: string;

@@ -120,9 +120,9 @@ const MEASUREMENTS = [
     source: 'body' as const
   },
   {
-    field: 'MRCONFIG',
-    description: 'Measurement of the Trust Domain configuration',
-    key: 'mrconfig',
+    field: 'MR CONFIG ID',
+    description: 'Measurement of the Trust Domain configuration ID',
+    key: 'mr_config_id',
     source: 'body' as const
   },
   {
