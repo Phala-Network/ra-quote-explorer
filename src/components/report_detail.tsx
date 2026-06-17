@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, ShieldOff, AlertTriangle, Info, ArrowLeftRight, Copy, Check } from "lucide-react";
+import { Shield, ShieldOff, AlertTriangle, Info, ArrowLeftRight, Copy, Check, X } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -60,7 +60,7 @@ const DcapVerificationStatus = ({ isVerified, provider }: { isVerified: boolean;
             href={providerMeta.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border bg-white hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+            className="flex-shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background hover:bg-accent transition-colors text-sm font-medium text-foreground"
           >
             <img src={providerMeta.logo} alt={providerMeta.name} className="h-5 w-5 rounded-full" />
             {providerMeta.name}
@@ -120,9 +120,9 @@ const MEASUREMENTS = [
     source: 'body' as const
   },
   {
-    field: 'MRCONFIG',
-    description: 'Measurement of the Trust Domain configuration',
-    key: 'mrconfig',
+    field: 'MR CONFIG ID',
+    description: 'Measurement of the Trust Domain configuration ID',
+    key: 'mr_config_id',
     source: 'body' as const
   },
   {
@@ -167,6 +167,7 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
   const showProofOfCloudNote = report.verified && report.proof_of_cloud === false;
   const [showHex, setShowHex] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
 
   const reportDataDecoded = hexToString(report.body.reportdata);
 
@@ -178,6 +179,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy:', error);
+      setCopyFailed(true);
+      setTimeout(() => setCopyFailed(false), 2000);
     }
   };
 
@@ -187,15 +190,18 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
       <Card>
         <CardContent className="pt-6">
           <Tabs defaultValue="phala" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6 h-11">
-              <TabsTrigger value="phala" className="h-9">
-                <img src="/phala-logo.svg" alt="Phala" className="h-7" />
+            <TabsList className="grid w-full grid-cols-3 mb-6 h-14">
+              <TabsTrigger value="phala" className="h-12 flex flex-col gap-0.5">
+                <img src="/phala-logo.svg" alt="" className="h-5" aria-hidden="true" />
+                <span className="text-[10px] leading-none">Phala</span>
               </TabsTrigger>
-              <TabsTrigger value="automata" className="h-9">
-                <img src="/automata-logo.png" alt="Automata" className="h-8" />
+              <TabsTrigger value="automata" className="h-12 flex flex-col gap-0.5">
+                <img src="/automata-logo.png" alt="" className="h-5" aria-hidden="true" />
+                <span className="text-[10px] leading-none">Automata</span>
               </TabsTrigger>
-              <TabsTrigger value="zkverify" className="h-9">
-                  <img src="/zkverify-logo.svg" alt="zkVerify" className="h-4" />
+              <TabsTrigger value="zkverify" className="h-12 flex flex-col gap-0.5">
+                <img src="/zkverify-logo.svg" alt="" className="h-4" aria-hidden="true" />
+                <span className="text-[10px] leading-none">zkVerify</span>
               </TabsTrigger>
             </TabsList>
 
@@ -234,10 +240,12 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                 variant="ghost"
                 size="icon"
                 onClick={handleCopyReportData}
-                className="h-8 w-8 relative"
+                aria-label="Copy to clipboard"
+                className={`h-8 w-8 relative ${copyFailed ? 'text-destructive' : ''}`}
               >
-                <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
+                <Copy className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied || copyFailed ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`} />
                 <Check className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+                <X className={`h-3.5 w-3.5 absolute transition-all duration-200 ${copyFailed ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
               </Button>
             </div>
           </div>
@@ -263,8 +271,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                 <span className="text-sm font-medium">PPID</span>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="text-muted-foreground hover:text-foreground transition-colors">
-                      <Info className="h-3.5 w-3.5" />
+                    <button aria-label="Learn more about PPID" className="inline-flex items-center justify-center h-7 w-7 -m-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80" side="right">
@@ -286,8 +294,8 @@ export function ReportDetail({ report }: { report: TDXQuote }) {
                     <span className="text-sm font-medium">{field}</span>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <button className="text-muted-foreground hover:text-foreground transition-colors">
-                          <Info className="h-3.5 w-3.5" />
+                        <button aria-label={`Learn more about ${field}`} className="inline-flex items-center justify-center h-7 w-7 -m-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                          <Info className="h-3.5 w-3.5" aria-hidden="true" />
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="w-80" side="right">

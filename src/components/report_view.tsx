@@ -35,7 +35,7 @@ export function ReportView({
   checksum,
 }: { report: TDXQuote; checksum: string }) {
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-muted py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto pb-6">
         {/* Header */}
         <SiteHeader showBackButton>
@@ -69,7 +69,7 @@ export function ReportView({
 
         {/* Footer */}
         <footer className="mt-8">
-          <div className="flex flex-inline gap-1.5 justify-center items-center">
+          <div className="inline-flex gap-1.5 justify-center items-center w-full">
             <img src="/apple-touch-icon.png" className="w-5 h-5 rounded-full overflow-hidden" alt="Phala" />
             <p className="text-muted-foreground text-sm">
               Developed by the{" "}

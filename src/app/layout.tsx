@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: 'https://proof.t16z.com',
+    url: "https://proof.t16z.com",
     siteName: "TEE Attestation Explorer by Phala",
     title: "TEE Attestation Explorer",
     description:

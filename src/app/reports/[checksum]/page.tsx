@@ -4,15 +4,16 @@ import { ReportNotFound } from "@/components/report_not_found";
 
 export default async function ReportDisplayPage({
   params,
-}: { params: { checksum: string } }) {
+}: { params: Promise<{ checksum: string }> }) {
+  const { checksum } = await params;
   try {
     const data = await ofetch(
-      `${process.env.API_PREFIX}/attestations/view/${params.checksum}`,
+      `${process.env.API_PREFIX}/attestations/view/${checksum}`,
     );
     if (!data) {
       return <ReportNotFound />;
     }
-    return <ReportView report={data} checksum={params.checksum} />;
+    return <ReportView report={data} checksum={checksum} />;
   } catch (_) {
     return <ReportNotFound />;
   }

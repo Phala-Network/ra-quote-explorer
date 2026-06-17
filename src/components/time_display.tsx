@@ -58,7 +58,7 @@ export function TimeDisplay({ isoString, className = '' }: TimeDisplayProps) {
       });
 
       return { friendly, detailed };
-    } catch (error) {
+    } catch (_error) {
       return {
         friendly: 'Invalid date',
         detailed: 'Invalid date'
@@ -76,7 +76,7 @@ export function TimeDisplay({ isoString, className = '' }: TimeDisplayProps) {
     >
       <time dateTime={isoString}>{friendly}</time>
       {showDetails && (
-        <span className="absolute left-0 bottom-full mb-1 px-2 py-1 text-sm bg-gray-800 text-white rounded shadow-lg whitespace-nowrap z-[100]">
+        <span className="absolute left-0 bottom-full mb-1 px-2 py-1 text-sm bg-popover text-popover-foreground border rounded shadow-lg whitespace-nowrap z-[100]">
           {detailed}
         </span>
       )}

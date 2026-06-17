@@ -33,7 +33,9 @@ function hexToUint8Array(hex: string) {
 }
 
 async function uploadUint8Array(data: Uint8Array) {
-  const blob = new Blob([data], { type: "application/octet-stream" });
+  const normalized = new Uint8Array(data.byteLength);
+  normalized.set(data);
+  const blob = new Blob([normalized.buffer], { type: "application/octet-stream" });
   const file = new File([blob], "quote.bin", {
     type: "application/octet-stream",
   });
@@ -113,7 +115,7 @@ export function QuoteUpload() {
       )}
 
       <div className="space-y-3">
-        <label className="text-sm font-medium">Paste hex quote or drop file</label>
+        <label htmlFor="hex-input" className="text-sm font-medium">Paste hex quote or drop file</label>
         <div
           className="relative"
           onDragOver={handleDragOver}
@@ -121,10 +123,11 @@ export function QuoteUpload() {
           onDrop={handleDrop}
         >
           <Textarea
+            id="hex-input"
             rows={10}
             className={`font-mono text-xs relative z-10 ${
               isDragging ? "border-primary-300 border-2 bg-primary-50/50" : ""
-            }`}
+            } ${hasError ? "border-destructive focus-visible:ring-destructive" : ""}`}
             placeholder="0x03000200000000000a00..."
             value={hex}
             disabled={isLoading}
@@ -135,7 +138,7 @@ export function QuoteUpload() {
           />
           {!hex && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-              <p className="text-gray-300 text-sm">
+              <p className="text-muted-foreground/40 text-sm">
                 Drag and drop your file here
               </p>
             </div>

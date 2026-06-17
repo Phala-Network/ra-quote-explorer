@@ -1,5 +1,4 @@
 import { ofetch } from "ofetch";
-import { File } from "formdata-node";
 
 function hexToUint8Array(hex: string) {
   hex = hex.trim();
@@ -29,7 +28,9 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const hex = searchParams.get("hex")!;
     const data = hexToUint8Array(hex);
-    const blob = new Blob([data], { type: "application/octet-stream" });
+    const normalized = new Uint8Array(data.byteLength);
+    normalized.set(data);
+    const blob = new Blob([normalized.buffer], { type: "application/octet-stream" });
     const file = new File([blob], "quote.bin", {
       type: "application/octet-stream",
     });

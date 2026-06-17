@@ -15,7 +15,7 @@ export function SiteHeader({ showBackButton = false, children }: SiteHeaderProps
         <h1 className="text-4xl font-black tracking-tight word-spacing-wide mb-2">
           TEE Attestation Explorer
         </h1>
-        <p className="text-muted-foreground font-lighter tracking-wide">
+        <p className="text-muted-foreground font-light tracking-wide">
           Verify and analyze Intel SGX and TDX attestation reports with ❤️ by{" "}
           <a
             href="https://phala.network"

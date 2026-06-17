@@ -43,7 +43,7 @@ const FileSchema = z.instanceof(File).refine(
 );
 
 async function getClientIP(): Promise<string> {
-  const headersList = headers();
+  const headersList = await headers();
   return headersList.get('x-forwarded-for') || 
          headersList.get('x-real-ip') || 
          'unknown';
@@ -160,7 +160,7 @@ export async function POST(req: Request) {
       const errorCount = await incrementErrorCount(ip);
       return new Response(
         JSON.stringify({ 
-          error: validationResult.error!.errors[0].message,
+          error: validationResult.error!.issues[0]?.message ?? "Invalid input",
           remainingAttempts: Math.max(0, MAX_ERRORS_PER_IP - errorCount)
         }), 
         {
